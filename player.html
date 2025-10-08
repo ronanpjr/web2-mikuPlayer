@@ -91,13 +91,61 @@
             background: linear-gradient(90deg, var(--theme-primary), var(--theme-gradient-end));
             transition: width 0.1s linear, background 0.5s ease;
         }
+        
+        /* START: Modern Volume Slider Styles */
+        .volume-slider {
+            /* Base styles: remove default appearance, set height, and transparent background */
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px; /* Increased slightly for a cleaner track */
+            background: transparent;
+        }
+        /* WebKit/Blink (Chrome, Safari, Opera, Edge) Track */
         .volume-slider::-webkit-slider-runnable-track {
+            height: 6px;
             background: var(--progress-bar-bg);
+            border-radius: 3px;
+            cursor: pointer;
         }
+        /* WebKit/Blink Thumb */
         .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px; /* A clean, small circle */
+            height: 14px;
             background: var(--theme-primary);
-            transition: background-color 0.5s ease;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-top: -4px; /* Center the 14px thumb on the 6px track (14-6)/2 = 4 */
+            box-shadow: 0 0 8px var(--theme-shadow); /* Subtle glow for sleekness, using theme shadow */
+            transition: all 0.2s ease;
         }
+        /* Mozilla (Firefox) Track */
+        .volume-slider::-moz-range-track {
+            height: 6px;
+            background: var(--progress-bar-bg);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        /* Mozilla (Firefox) Thumb */
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: var(--theme-primary);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--theme-shadow);
+            transition: all 0.2s ease;
+        }
+        /* Add hover effect for the thumb (optional but sleek) */
+        .volume-slider::-webkit-slider-thumb:hover,
+        .volume-slider::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 12px var(--theme-shadow);
+        }
+        /* END: Modern Volume Slider Styles */
+        
         .control-btn {
             color: var(--text-color-muted);
             transition: all 0.2s ease-in-out;
@@ -149,16 +197,12 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <canvas id="bg-canvas"></canvas>
-    <!-- Audio element for playback -->
     <audio id="audioPlayer"></audio>
 
     <div class="w-full max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Player UI -->
         <div id="mainPlayerCard" class="lg:col-span-2 player-bg rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden">
             
-            <!-- Display Area: Toggles between Album Art and Lyrics -->
             <div id="displayArea" class="flex-grow flex flex-col justify-center text-center relative">
-                <!-- Art View -->
                 <div id="artView" class="transition-opacity duration-500">
                     <div id="albumArtContainer" class="relative w-48 h-48 md:w-64 md:h-64 mx-auto mb-6 cursor-pointer group">
                         <img id="albumArt" src="images/default_art.png" alt="Album Art" class="w-full h-full rounded-full shadow-2xl object-cover transition-all duration-500 transform group-hover:scale-105 outline outline-2 outline-offset-2 outline-white/75">
@@ -168,7 +212,6 @@
                     <p id="vocaloidSinger" class="text-sm">Vocaloid</p>
                 </div>
 
-                <!-- Lyrics View -->
                 <div id="lyricsView" class="absolute inset-0 w-full h-full flex flex-col opacity-0 pointer-events-none transition-opacity duration-500 bg-black/30 backdrop-blur-sm rounded-2xl">
                     <button id="closeLyricsBtn" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10">
                         <i class="fas fa-times text-2xl"></i>
@@ -176,14 +219,11 @@
                     <h2 id="lyricsTitle" class="font-orbitron text-3xl font-bold mb-2 text-center flex-shrink-0 pt-6"></h2>
                     <h3 id="lyricsArtist" class="text-lg mb-6 text-center text-white/70 flex-shrink-0"></h3>
                     <div id="lyricsContent" class="text-center text-lg leading-relaxed flex-grow overflow-y-auto px-6 pb-6">
-                        <!-- Lyrics will be injected here -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
-            <!-- Controls Area: Always Visible -->
             <div id="controlsArea" class="flex-shrink-0 pt-4">
-                <!-- Progress Bar and Timers -->
                 <div class="mb-4">
                     <div id="progressBarContainer" class="progress-bar-container w-full h-2 rounded-full overflow-hidden">
                         <div id="progressBar" class="progress-bar h-full rounded-full"></div>
@@ -194,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- Controls -->
                 <div class="flex items-center justify-center space-x-6 md:space-x-10">
                     <button id="prevBtn" class="control-btn text-2xl md:text-3xl">
                         <i class="fas fa-backward-step"></i>
@@ -208,8 +247,7 @@
                     </button>
                 </div>
 
-                 <!-- Volume Control -->
-                <div class="flex items-center justify-center space-x-3 mt-6 w-full max-w-xs mx-auto faint-text">
+                 <div class="flex items-center justify-center space-x-3 mt-6 w-full max-w-xs mx-auto faint-text">
                     <i class="fas fa-volume-down"></i>
                     <input type="range" id="volumeSlider" class="volume-slider w-full h-1.5 rounded-lg appearance-none cursor-pointer" min="0" max="1" step="0.01" value="0.75">
                     <i class="fas fa-volume-up"></i>
@@ -217,12 +255,10 @@
             </div>
         </div>
 
-        <!-- Playlist -->
         <div class="player-bg rounded-2xl p-4 md:p-6 flex flex-col">
             <h3 class="font-orbitron text-xl font-bold mb-4 flex-shrink-0">Playlist</h3>
             <div id="playlistContainer" class="playlist-container overflow-y-auto flex-grow">
-                <!-- Playlist items will be injected here by JavaScript -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -588,4 +624,3 @@
     </script>
 </body>
 </html>
-
