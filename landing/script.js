@@ -53,4 +53,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     `;
     document.head.appendChild(style);
+
+    // --- Theme Toggle Logic ---
+    const themeToggleButton = document.getElementById("theme-toggle-button");
+    const body = document.body;
+
+    // Function to set the theme
+    const setTheme = (isLight) => {
+        if (isLight) {
+            body.classList.add("light-theme");
+        } else {
+            body.classList.remove("light-theme");
+        }
+    };
+
+    // Check for system preference and set initial theme
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    setTheme(prefersLight);
+
+    // Toggle theme on button click
+    themeToggleButton.addEventListener("click", function () {
+        setTheme(!body.classList.contains("light-theme"));
+    });
 });

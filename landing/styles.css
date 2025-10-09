@@ -5,42 +5,18 @@
     font-weight: 300;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Gilroy';
     src: url('gilroy/Gilroy-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('gilroy/Gilroy-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('gilroy/Gilroy-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
 @font-face {
     font-family: 'Gilroy';
     src: url('gilroy/Gilroy-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
-
-@font-face {
-    font-family: 'Gilroy';
-    src: url('gilroy/Gilroy-ExtraBold.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-}
-
 @font-face {
     font-family: 'Gilroy';
     src: url('gilroy/Gilroy-Black.ttf') format('truetype');
@@ -48,14 +24,35 @@
     font-style: normal;
 }
 
+/* --- THEME VARIABLES --- */
+:root {
+    --body-bg: #1a1a2e;
+    --text-color: white;
+    --icon-color: white;
+    --triangle-opacity: 0.6;
+    --background-image-opacity: 0.88;
+    --background-overlay: linear-gradient(to bottom right, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.7), rgba(15, 52, 96, 0.8));
+}
+
+.light-theme {
+    --body-bg: #f0f2f5;
+    --text-color: #1a1a2e;
+    --icon-color: #1a1a2e;
+    --triangle-opacity: 0.3;
+    --background-image-opacity: 0.5;
+    --background-overlay: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(240, 242, 245, 0.7), rgba(230, 235, 240, 0.8));
+}
+
+/* --- BASE STYLES --- */
 body, html {
     margin: 0;
     padding: 0;
-    font-family:'Gilroy', sans-serif;
-    background-color: #1a1a2e;
-    color: white;
+    font-family: 'Gilroy', sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color);
     overflow: hidden;
     height: 100%;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .background-container {
@@ -71,7 +68,8 @@ body, html {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.88;
+    opacity: var(--background-image-opacity);
+    transition: opacity 0.3s;
 }
 
 .background-overlay {
@@ -80,7 +78,8 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom right, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.7), rgba(15, 52, 96, 0.8));
+    background: var(--background-overlay);
+    transition: background 0.3s;
 }
 
 .gradient-triangle {
@@ -101,6 +100,8 @@ body, html {
     width: 150%;
     height: auto;
     transform: translateY(40%);
+    opacity: var(--triangle-opacity);
+    transition: opacity 0.3s;
 }
 
 .decorative-triangles {
@@ -127,6 +128,9 @@ body, html {
 header {
     width: 100%;
     z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo-container {
@@ -207,6 +211,11 @@ header {
     cursor: pointer;
 }
 
+.play-now-button a {
+    color: white;
+    text-decoration: none;
+}
+
 .play-now-button:hover {
     transform: scale(1.05);
 }
@@ -215,6 +224,7 @@ header {
     display: flex;
     align-items: center;
     gap: 0.7rem;
+    color: var(--icon-color);
 }
 
 .icon-button {
@@ -232,6 +242,7 @@ header {
 .icon {
     width: 2.1rem;
     height: 2.1rem;
+    color: var(--text-color)
 }
 
 .icon.apple {
@@ -295,6 +306,28 @@ header {
     opacity: 0.7;
 }
 
+/* --- THEME BUTTON STYLES --- */
+#theme-toggle-button {
+    background: none;
+    border: none;
+    color: var(--icon-color);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+.sun-icon {
+    display: none; /* Hidden by default */
+}
+.moon-icon {
+    display: block; /* Shown by default */
+}
+.light-theme .sun-icon {
+    display: block; /* Show sun in light theme */
+}
+.light-theme .moon-icon {
+    display: none; /* Hide moon in light theme */
+}
+
+
 /* --- DESKTOP STYLES --- */
 @media (min-width: 1024px) {
     .main-content {
@@ -303,8 +336,8 @@ header {
 
     .hero-section {
         flex-direction: row;
-        align-items: flex-start; /* Changed to flex-start */
-        padding-top: 5vh; /* Added padding to push it down from the top */
+        align-items: flex-start;
+        padding-top: 10vh;
     }
 
     .left-content {
@@ -313,6 +346,7 @@ header {
 
     .main-title {
         font-size: 12.5rem;
+        margin-top: -2vh;
     }
 
     .description {
@@ -327,7 +361,12 @@ header {
 
     .play-now-button {
         padding: 1rem 3rem;
-        font-size: 2rem;
+        font-size: 2rem;        
+    }
+
+    .play-now-button a {
+        color: white;
+        text-decoration: none;
     }
 
     .icon {
@@ -340,10 +379,13 @@ header {
     }
 
     .right-content {
+        position: absolute;
         width: 65%;
         height: 80vh;
         max-width: none;
         max-height: none;
+        bottom: 0;
+        right: 0;
     }
 
     .gradient-triangle {
@@ -366,5 +408,6 @@ header {
         right: 0;
         width: 110%;
         transform: translateY(0);
+        bottom: auto;
     }
 }
