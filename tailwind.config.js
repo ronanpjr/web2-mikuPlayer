@@ -1,11 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./*.html"],
+  content: ["./public/**/*.{html,js}"],
+  darkMode: "class", // Add this line
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Gilroy', 'sans-serif'],
-      },
       colors: {
         background: 'rgb(var(--color-background) / <alpha-value>)',
         foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
@@ -13,7 +11,7 @@ module.exports = {
         'muted-foreground': 'rgb(var(--color-muted-foreground) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
         secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
-      },
+      }
     },
   },
   plugins: [],
