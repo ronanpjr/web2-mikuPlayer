@@ -3,6 +3,9 @@ module.exports = {
   content: ["./*.html"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Gilroy', 'sans-serif'],
+      },
       colors: {
         background: 'rgb(var(--color-background) / <alpha-value>)',
         foreground: 'rgb(var(--color-foreground) / <alpha-value>)',

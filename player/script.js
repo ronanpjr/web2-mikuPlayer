@@ -71,10 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         requestAnimationFrame(animate);
     }
-    // --- End Canvas Background ---
 
 
-    // --- Original Player Code ---
     const root = document.documentElement;
     const audioPlayer = document.getElementById('audioPlayer');
     // ... (rest of your existing script.js code)
