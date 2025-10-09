@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const root = document.documentElement;
     const audioPlayer = document.createElement('audio');
     
-    // --- Get Player & UI Elements ---
     const albumArt = document.querySelector('.lg\\:col-span-1 img');
     const songTitle = document.querySelector('.lg\\:col-span-1 h3');
     const songArtist = document.querySelector('.lg\\:col-span-1 p');
@@ -20,13 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const playlistToggleBtn = document.getElementById('playlist-toggle');
     const playlistGrid = document.getElementById('playlist-grid');
     const playlistContainer = playlistGrid.querySelector('.grid');
-    
-    // --- Playlist Data with Light/Dark Themes ---
+   
     const playlist = [
         {
             title: "World is Mine", artist: "ryo (supercell)",
             src: "https://ia800905.us.archive.org/9/items/Vocaloid-worldIsMine/Vocaloid-worldIsMine.mp3",
-            art: "../old/images/world_is_mine.png",
+            art: "../assets/images/world_is_mine.png",
             theme: { 
                 primary: '50 205 255', secondary: '135 206 235', triangles: ['#32CDFF', '#87ceeb', '#ff69b4'],
                 light: { primary: '0 168 232', secondary: '0 126 167', triangles: ['#00A8E8', '#007EA7', '#fbcfe8']}
@@ -35,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             title: "Echo", artist: "Crusher-P",
             src: "https://ia800201.us.archive.org/16/items/VocaloidGumiEcho/Vocaloid%20Gumi%20-%20Echo.mp3",
-            art: "../old/images/echo.png",
+            art: "../assets/images/echo.png",
             theme: { 
                 primary: '69 179 157', secondary: '46 204 113', triangles: ['#45b39d', '#2ecc71', '#f1c40f'],
                 light: { primary: '39 174 96', secondary: '22 160 133', triangles: ['#27ae60', '#16a085', '#fde68a']}
@@ -44,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             title: "Remote Control", artist: "Jesus-P",
             src: "https://ia801308.us.archive.org/29/items/KagamineRinLenRemoteControl/Kagamine%20Rin%20%26%20Len%20-%20Remote%20Control.mp3",
-            art: "../old/images/remote_control.png",
+            art: "../assets/images/remote_control.png",
             theme: { 
                 primary: '241 196 15', secondary: '247 220 111', triangles: ['#f1c40f', '#f7dc6f', '#3498db'],
                 light: { primary: '243 156 18', secondary: '230 126 34', triangles: ['#f39c12', '#e67e22', '#93c5fd']}
@@ -53,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             title: "Just Be Friends", artist: "Dixie Flatline",
             src: "https://ia600205.us.archive.org/10/items/JustBeFriends/Luka-JustBeFriends.mp3",
-            art: "../old/images/just_be_friends.png",
+            art: "../assets/images/just_be_friends.png",
             theme: { 
                 primary: '229 57 171', secondary: '244 161 216', triangles: ['#e539ab', '#f4a1d8', '#8e44ad'],
                 light: { primary: '216 27 96', secondary: '194 24 91', triangles: ['#d81b60', '#c2185b', '#c084fc']}
@@ -62,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             title: "Yoshiwara Lament", artist: "Asa-P",
             src: "https://archive.org/download/yoshiwara-lament-asa-feat.-kasane-teto/Yoshiwara%20Lament%20-%20Asa%20feat.%20Kasane%20Teto.mp3",
-            art: "../old/images/yoshiwara_lament.png",
+            art: "../assets/images/yoshiwara_lament.png",
             theme: { 
                 primary: '192 57 43', secondary: '231 76 60', triangles: ['#c0392b', '#e74c3c', '#f1c40f'],
                 light: { primary: '231 76 60', secondary: '192 57 43', triangles: ['#e74c3c', '#c0392b', '#fde68a']}
@@ -169,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Event Listeners ---
     playPauseBtn.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
     prevBtn.addEventListener('click', prevSong);
     nextBtn.addEventListener('click', nextSong);
@@ -181,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPlayer.addEventListener('ended', nextSong);
     progressBar.addEventListener('input', setProgress);
     
-    // --- Initialisation ---
     function initialize() {
         const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
         if (prefersLight) {
@@ -199,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
         animate(); 
     }
     
-    // --- Canvas Background ---
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');

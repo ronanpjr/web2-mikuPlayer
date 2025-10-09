@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Canvas Background ---
+    
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let triangles = [];
-    // Default colors, will be updated by the theme
     let triangleColors = ['#32CDFF', '#e539ab', '#ffffff'];
 
     function resizeCanvas() {
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createTriangles(colors) {
-        // If specific colors are provided, use them. Otherwise, use the default.
         if (colors && colors.length) {
             triangleColors = colors;
         }
@@ -75,13 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const root = document.documentElement;
     const audioPlayer = document.getElementById('audioPlayer');
-    // ... (rest of your existing script.js code)
-
-    // --- Initialisation ---
-    // renderPlaylist(); // Your existing function
-    // loadSong(playlist[currentSongIndex]); // Your existing function
     
-    // Start the animation
-    createTriangles(); // Create initial set of triangles
+    createTriangles(); 
     animate(); 
 });
