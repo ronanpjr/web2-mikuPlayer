@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Canvas Background ---
     const canvas = document.getElementById('bg-canvas');
+    // If the canvas element doesn't exist, stop the script
+    if (!canvas) {
+        console.error("Canvas element with id 'bg-canvas' not found.");
+        return;
+    }
+
     const ctx = canvas.getContext('2d');
     let triangles = [];
-    // Default colors, will be updated by the theme
-    let triangleColors = ['#32CDFF', '#e539ab', '#ffffff'];
+    let triangleColors = ['#32CDFF', '#e539ab', '#ffffff']; // Default colors
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -12,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    
+
     class Triangle {
         constructor() {
             this.x = Math.random() * canvas.width;
@@ -52,11 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function createTriangles(colors) {
-        // If specific colors are provided, use them. Otherwise, use the default.
-        if (colors && colors.length) {
-            triangleColors = colors;
-        }
+    function createTriangles() {
         triangles = [];
         for (let i = 0; i < 50; i++) {
             triangles.push(new Triangle());
@@ -71,19 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         requestAnimationFrame(animate);
     }
-    // --- End Canvas Background ---
 
-
-    // --- Original Player Code ---
-    const root = document.documentElement;
-    const audioPlayer = document.getElementById('audioPlayer');
-    // ... (rest of your existing script.js code)
-
-    // --- Initialisation ---
-    // renderPlaylist(); // Your existing function
-    // loadSong(playlist[currentSongIndex]); // Your existing function
-    
-    // Start the animation
-    createTriangles(); // Create initial set of triangles
+    // --- Start the animation ---
+    createTriangles();
     animate(); 
 });
