@@ -250,8 +250,18 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', nextSong);
     themeToggleBtn.addEventListener('click', toggleTheme);
     playlistToggleBtn.addEventListener('click', () => {
-        playlistGrid.classList.toggle('hidden');
-    });
+    if (playlistGrid.classList.contains('hidden')) {
+        playlistGrid.classList.remove('hidden');
+        setTimeout(() => {
+            playlistGrid.style.opacity = '1';
+        }, 10);
+    } else {
+        playlistGrid.style.opacity = '0';
+        setTimeout(() => {
+            playlistGrid.classList.add('hidden');
+        }, 300); 
+    }
+});
     audioPlayer.addEventListener('timeupdate', updateProgress);
     audioPlayer.addEventListener('ended', nextSong);
     progressBar.addEventListener('input', setProgress);

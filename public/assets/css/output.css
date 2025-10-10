@@ -1120,6 +1120,10 @@ body.light {
   line-height: 1.2;
 }
 
+#playlist-grid {
+  transition: opacity 0.3s ease-in-out;
+}
+
 #playlist-grid .grid {
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 1.0rem;
@@ -1294,3 +1298,4 @@ body.light .player-card-glass::before {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
