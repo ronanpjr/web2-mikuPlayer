@@ -54,22 +54,23 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     document.head.appendChild(style);
 
-    // --- Theme Toggle Logic ---
+    // --- Tema ---
     const themeToggleButton = document.getElementById("theme-toggle-button");
     const body = document.body;
+    const logoIcon = document.querySelector(".logo-icon");
 
-    // Function to set the theme
     const setTheme = (isLight) => {
         if (isLight) {
             body.classList.add("light-theme");
             localStorage.setItem('theme', 'light');
+            logoIcon.src = './assets/images/logo-black.png'; // Muda para o logo preto
         } else {
             body.classList.remove("light-theme");
             localStorage.setItem('theme', 'dark');
+            logoIcon.src = './assets/images/logo-white.png'; // Muda para o logo branco
         }
     };
 
-    // Check for saved theme in localStorage or system preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         setTheme(savedTheme === 'light');
@@ -79,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // Toggle theme on button click
     themeToggleButton.addEventListener("click", function () {
         setTheme(!body.classList.contains("light-theme"));
     });

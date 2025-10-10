@@ -1,4 +1,4 @@
-/* --- FONT DEFINITIONS --- */
+
 @font-face {
     font-family: 'Gilroy';
     src: url('../fonts/gilroy/Gilroy-Light.ttf') format('truetype');
@@ -24,7 +24,7 @@
     font-style: normal;
 }
 
-/* --- THEME VARIABLES --- */
+/* --- Variaveis de tema --- */
 :root {
     --body-bg: #1a1a2e;
     --text-color: white;
@@ -43,7 +43,7 @@
     --background-overlay: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(240, 242, 245, 0.7), rgba(230, 235, 240, 0.8));
 }
 
-/* --- BASE STYLES --- */
+/* --- base --- */
 body, html {
     margin: 0;
     padding: 0;
@@ -328,7 +328,7 @@ header {
 }
 
 
-/* --- DESKTOP STYLES --- */
+/* --- Desktop --- */
 @media (min-width: 1024px) {
     .main-content {
         padding: 2rem 8rem;

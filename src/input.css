@@ -30,27 +30,31 @@
 
 @font-face {
     font-family: 'Gilroy';
-    src: url('../landing/gilroy/Gilroy-Light.ttf') format('truetype');
+    src: url('../fonts/gilroy/Gilroy-Light.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
 @font-face {
     font-family: 'Gilroy';
-    src: url('../landing/gilroy/Gilroy-Regular.ttf') format('truetype');
+    src: url('../fonts/gilroy/Gilroy-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 @font-face {
     font-family: 'Gilroy';
-    src: url('../landing/gilroy/Gilroy-Bold.ttf') format('truetype');
+    src: url('../fonts/gilroy/Gilroy-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
 @font-face {
     font-family: 'Gilroy';
-    src: url('../landing/gilroy/Gilroy-Black.ttf') format('truetype');
+    src: url('../fonts/gilroy/Gilroy-Black.ttf') format('truetype');
     font-weight: 900;
     font-style: normal;
+}
+
+body {
+    font-family: 'Gilroy', sans-serif;
 }
 
 :root {
@@ -59,12 +63,12 @@
   --color-card: 39 39 42; /* Zinc 800 */
   --color-muted-foreground: 161 161 170; /* Zinc 400 */
   
-  /* Miku Blue - Default Theme */
+  /* Miku azul */
   --color-primary: 50 205 255;
   --color-secondary: 135 206 235;
   --theme-shadow: rgba(50, 205, 255, 0.4);
 
-  /* Mac Icon specific colors (Dark Theme) */
+  /* Mac */
   --icon-bg: 50 50 55;
   --icon-border: 80 80 90;
   --icon-text: 244 244 245;
@@ -77,7 +81,6 @@ body.light {
   --color-card: 255 255 255; /* White */
   --color-muted-foreground: 113 113 122; /* Zinc 500 */
 
-  /* Mac Icon specific colors (Light Theme) */
   --icon-bg: 255 255 255;
   --icon-border: 200 200 205;
   --icon-text: 24 24 27;
@@ -93,7 +96,6 @@ body.light {
   z-index: -1;
 }
 
-/* ... other styles like scrollbar, mac-icon-item, neumorphic-icon, player-card-glass ... */
 .mac-icon-item {
     display: flex;
     flex-direction: column;
@@ -143,7 +145,7 @@ body.light {
 
 #playlist-grid .grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1.5rem;
+    gap: 1.0rem;
 }
 
 .neumorphic-icon {
@@ -221,33 +223,32 @@ body.light .player-card-glass::before {
     background-color: rgba(255, 255, 255, 0.6);
 }
 #playlist-toggle {
-    display: flex; /* Use flexbox to center content */
+    display: flex; 
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center the folder vertically */
-    gap: 0.5rem; /* Space between folder and text */
-    padding: 1rem; /* Padding for the entire button area */
-    border-radius: 1.25rem; /* Keep existing rounded button corners */
-    aspect-ratio: 1 / 1; /* Make the button container square */
+    justify-content: center; 
+    gap: 0.5rem; 
+    padding: 1rem; 
+    border-radius: 1.25rem; 
+    aspect-ratio: 1 / 1; 
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
-    position: relative; /* For z-index if needed */
+    position: relative; 
 }
 
 #playlist-toggle:hover {
-    transform: translateY(-2px); /* Lift button on hover */
+    transform: translateY(-2px); 
 }
 
 
-/* Re-designed: Folder Icon styles to match the provided image */
 .folder-icon {
-    width: 90%; /* Adjust to fit well within the square button */
+    width: 90%; 
     height: 70%; 
     position: relative;
     background: linear-gradient(to bottom right, 
                                 rgb(var(--color-primary)), 
                                 rgb(var(--color-secondary)));
-    /* Specific border-radius to match the image: top-left, top-right, bottom-right, bottom-left */
+    
     border-radius: 12px 30px 30px 30px; 
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease-in-out;
@@ -256,26 +257,24 @@ body.light .player-card-glass::before {
 .folder-icon::before {
     content: '';
     position: absolute;
-    top: -15%; /* Position tab correctly relative to folder body */
+    top: -15%; 
     left: 0;
-    width: 50%; /* Width of the tab */
-    height: 20%; /* Height of the tab */
+    width: 50%;
+    height: 20%; 
     background: linear-gradient(to bottom right, 
                                 rgb(var(--color-primary)), 
                                 rgb(var(--color-secondary)));
-    /* Specific border-radius for the tab */
     border-radius: 15px 15px 0 0; 
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease-in-out;
 }
 
-/* Optional hover effects for the folder itself */
 #playlist-toggle:hover .folder-icon {
-    transform: scale(1.03) translateY(-3px); /* Slightly enlarge and lift the folder on hover */
+    transform: scale(1.03) translateY(-3px); 
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
 }
 
 #playlist-toggle:active .folder-icon {
-    transform: scale(0.98) translateY(0px); /* Slightly press down on click */
+    transform: scale(0.98) translateY(0px); 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
