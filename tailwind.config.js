@@ -4,6 +4,9 @@ module.exports = {
   darkMode: "class", // Add this line
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Gilroy', 'sans-serif'],
+      },
       colors: {
         background: 'rgb(var(--color-background) / <alpha-value>)',
         foreground: 'rgb(var(--color-foreground) / <alpha-value>)',

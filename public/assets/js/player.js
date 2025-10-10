@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioPlayer = document.createElement('audio');
     
     const albumArt = document.querySelector('.lg\\:col-span-1 img');
+    const logoIcon = document.querySelector('.logo-icon'); 
     const songTitle = document.querySelector('.lg\\:col-span-1 h3');
     const songArtist = document.querySelector('.lg\\:col-span-1 p');
     const playPauseBtn = document.getElementById('play-pause-button');
@@ -65,12 +66,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 primary: '192 57 43', secondary: '231 76 60', triangles: ['#c0392b', '#e74c3c', '#f1c40f'],
                 light: { primary: '231 76 60', secondary: '192 57 43', triangles: ['#e74c3c', '#c0392b', '#fde68a']}
             }
+        },
+        {
+            title: "Yoshiwara Lament", artist: "Asa-P",
+            src: "https://archive.org/download/yoshiwara-lament-asa-feat.-kasane-teto/Yoshiwara%20Lament%20-%20Asa%20feat.%20Kasane%20Teto.mp3",
+            art: "../assets/images/yoshiwara_lament.png",
+            theme: { 
+                primary: '192 57 43', secondary: '231 76 60', triangles: ['#c0392b', '#e74c3c', '#f1c40f'],
+                light: { primary: '231 76 60', secondary: '192 57 43', triangles: ['#e74c3c', '#c0392b', '#fde68a']}
+            }
         }
+        
     ];
 
     let currentSongIndex = 0;
     let isPlaying = false;
     let isLightMode = false;
+
+    function updateLogo(lightMode) {
+        if (lightMode) {
+            logoIcon.src = '../assets/images/logo-black.png';
+        } else {
+            logoIcon.src = '../assets/images/logo-white.png';
+        }
+    }
 
     function setTheme(songTheme) {
         const currentThemePalette = isLightMode && songTheme.light ? songTheme.light : songTheme;
@@ -84,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('light');
         sunIcon.classList.toggle('hidden');
         moonIcon.classList.toggle('hidden');
+        updateLogo(isLightMode);
         localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
         setTheme(playlist[currentSongIndex].theme);
     }
@@ -196,6 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sunIcon.classList.add('hidden');
             moonIcon.classList.remove('hidden');
         }
+
+        updateLogo(isLightMode);
 
         renderPlaylist();
         loadSong(playlist[currentSongIndex]);
