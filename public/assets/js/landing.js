@@ -62,14 +62,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const setTheme = (isLight) => {
         if (isLight) {
             body.classList.add("light-theme");
+            localStorage.setItem('theme', 'light');
         } else {
             body.classList.remove("light-theme");
+            localStorage.setItem('theme', 'dark');
         }
     };
 
-    // Check for system preference and set initial theme
-    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-    setTheme(prefersLight);
+    // Check for saved theme in localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        setTheme(savedTheme === 'light');
+    } else {
+        const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        setTheme(prefersLight);
+    }
+
 
     // Toggle theme on button click
     themeToggleButton.addEventListener("click", function () {
