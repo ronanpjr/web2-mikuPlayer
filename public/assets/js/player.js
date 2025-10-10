@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('light');
         sunIcon.classList.toggle('hidden');
         moonIcon.classList.toggle('hidden');
+        localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
         setTheme(playlist[currentSongIndex].theme);
     }
 
@@ -150,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistContainer.innerHTML = '';
         playlist.forEach((song, index) => {
             const songItem = document.createElement('div');
-            songItem.className = 'mac-icon-item'; // Use the new class
+            songItem.className = 'mac-icon-item';
             songItem.innerHTML = `
                 <div class="icon-wrapper">
                     <img src="${song.art}" alt="${song.title}" />
@@ -179,17 +180,23 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.addEventListener('input', setProgress);
     
     function initialize() {
-        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-        if (prefersLight) {
-            isLightMode = true;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            isLightMode = savedTheme === 'light';
+        } else {
+            isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches;
+        }
+
+        if (isLightMode) {
             document.body.classList.add('light');
             sunIcon.classList.remove('hidden');
             moonIcon.classList.add('hidden');
         } else {
-            isLightMode = false;
+            document.body.classList.remove('light');
             sunIcon.classList.add('hidden');
             moonIcon.classList.remove('hidden');
         }
+
         renderPlaylist();
         loadSong(playlist[currentSongIndex]);
         animate(); 
