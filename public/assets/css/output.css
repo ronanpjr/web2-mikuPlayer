@@ -1299,3 +1299,9 @@ body.light .player-card-glass::before {
   }
 }
 
+.player-card-glass img,
+.player-card-glass h3,
+.player-card-glass p,
+#bg-canvas {
+  transition: opacity 0.4s ease-in-out;
+}

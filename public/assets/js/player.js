@@ -166,11 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadSong(song) {
-        songTitle.textContent = song.title;
-        songArtist.textContent = song.artist;
-        albumArt.src = song.art;
-        audioPlayer.src = song.src;
-        setTheme(song.theme);
+        const elementsToFade = [albumArt, songTitle, songArtist, canvas];
+
+        elementsToFade.forEach(el => el.style.opacity = '0');
+
+        setTimeout(() => {
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            albumArt.src = song.art;
+            audioPlayer.src = song.src;
+            setTheme(song.theme);
+            elementsToFade.forEach(el => el.style.opacity = '1');
+        }, 400); 
     }
 
     function playSong() {
