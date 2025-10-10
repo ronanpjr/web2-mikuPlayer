@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    background-image: url('../images/dark-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  #background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(24, 24, 27, 0.6), rgba(24, 24, 27, 0.9));
+    z-index: -2; 
+  }
+
+  body.light #background-overlay {
+    background: linear-gradient(to bottom, rgba(244, 244, 245, 0.6), rgba(244, 244, 245, 0.9));
+  }
+}
+
+
+
 @font-face {
     font-family: 'Gilroy';
     src: url('../landing/gilroy/Gilroy-Light.ttf') format('truetype');
