@@ -576,6 +576,48 @@ body.light #background-overlay {
   background: linear-gradient(to bottom, rgba(244, 244, 245, 0.6), rgba(244, 244, 245, 0.9));
 }
 
+.mac-icon-item {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.icon-wrapper {
+  height: 6rem;
+  width: 6rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  /* You can change w-24 (96px) and h-24 to make icons bigger or smaller */
+}
+
+.icon-wrapper:hover {
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.icon-wrapper img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.mac-icon-item p {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(var(--color-foreground) / 0.8);
+}
+
 .fixed {
   position: fixed;
 }
