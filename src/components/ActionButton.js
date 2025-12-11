@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 /**
  * ActionButton - Styled action button with icon and label
@@ -6,7 +7,8 @@ import React from 'react';
  */
 const ActionButton = ({ icon, label, onClick, isActive = false, className = '' }) => {
     return (
-        <button
+        <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={onClick}
             className={`neumorphic-icon group ${isActive ? 'text-primary' : ''} ${className}`}
         >
@@ -14,7 +16,7 @@ const ActionButton = ({ icon, label, onClick, isActive = false, className = '' }
             <span className={`text-xs text-muted-foreground group-hover:text-foreground ${isActive ? 'text-foreground font-bold' : ''}`}>
                 {label}
             </span>
-        </button>
+        </motion.button>
     );
 };
 

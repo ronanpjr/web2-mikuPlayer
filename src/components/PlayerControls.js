@@ -89,7 +89,7 @@ const PlayerControls = ({
 
                 {/* Vertical Slider Popup */}
                 {showVolume && (
-                    <div className="absolute bottom-full mb-2 p-3 bg-card border border-white/10 rounded-xl shadow-xl animate-in fade-in slide-in-from-bottom-2 z-50">
+                    <div className="absolute bottom-full mb-4 p-4 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl animate-in fade-in slide-in-from-bottom-2 z-50">
                         <div className="h-32 w-8 flex items-center justify-center">
                             <input
                                 type="range"
@@ -98,8 +98,7 @@ const PlayerControls = ({
                                 step="0.01"
                                 value={volume}
                                 onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-                                className="h-24 w-1 rounded-full appearance-none cursor-pointer accent-primary bg-muted-foreground/30 -rotate-90 origin-center"
-                                style={{ width: '6rem' }}
+                                className="volume-slider -rotate-90 origin-center"
                             />
                         </div>
                     </div>
