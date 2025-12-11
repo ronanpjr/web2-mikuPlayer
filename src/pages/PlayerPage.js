@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Lyrics from '../components/Lyrics';
 
 const PlayerPage = () => {
@@ -138,12 +138,131 @@ const PlayerPage = () => {
     const [showLyrics, setShowLyrics] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [showVolume, setShowVolume] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Theme Config State
+    const [themeMode, setThemeMode] = useState('auto'); // 'auto' | 'manual'
+    const [manualTheme, setManualTheme] = useState(null); // { primary, secondary }
+
+    // Check for shared song in URL
+    useEffect(() => {
+        const songIndexParam = searchParams.get('song');
+        if (songIndexParam !== null) {
+            const index = parseInt(songIndexParam, 10);
+            if (!isNaN(index) && index >= 0 && index < playlist.length) {
+                setActivePlaylistId(null); // Ensure we use the main playlist
+                setCurrentSongIndex(index);
+                // Optional: Auto-play when shared link is opened
+                // setIsPlaying(true); 
+            }
+        }
+    }, [searchParams, playlist]);
+
+    const handleShare = () => {
+        // Find current song in the main playlist to get the correct global index
+        const currentSongObj = activeQueue[currentSongIndex];
+        const globalIndex = playlist.findIndex(s => s.title === currentSongObj.title); // Using title as unique identifier is safer than index if activeQueue is different
+
+        if (globalIndex !== -1) {
+            const url = `${window.location.origin}${window.location.pathname}?song=${globalIndex}`;
+            navigator.clipboard.writeText(url).then(() => {
+                alert(`Link copiado para a área de transferência: ${url}`);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    };
 
     // Note: Playlist Creation State moved up to use in activeQueue memo
 
     const audioRef = useRef(null);
     const canvasRef = useRef(null);
     const triangleColorsRef = useRef(['#32CDFF', '#87ceeb', '#ff69b4']); // Default
+
+    // Equalizer State & Refs
+    const [showSettings, setShowSettings] = useState(false);
+    const [eqBands, setEqBands] = useState([0, 0, 0, 0, 0]); // 60, 250, 1k, 4k, 12k
+    const audioContextRef = useRef(null);
+    const sourceNodeRef = useRef(null);
+    const filtersRef = useRef([]);
+    const isAudioContextInitialized = useRef(false);
+
+    // Initialize Audio Context
+    const initAudioContext = () => {
+        if (isAudioContextInitialized.current || !audioRef.current) return;
+
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+            audioContextRef.current = ctx;
+
+            const source = ctx.createMediaElementSource(audioRef.current);
+            sourceNodeRef.current = source;
+
+            // Create Filters
+            const frequencies = [60, 250, 1000, 4000, 12000];
+            const filters = frequencies.map(freq => {
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'peaking';
+                filter.frequency.value = freq;
+                filter.Q.value = 1;
+                filter.gain.value = 0;
+                return filter;
+            });
+            filtersRef.current = filters;
+
+            // Connect Chain: Source -> F1 -> F2 -> ... -> F5 -> Destination
+            source.connect(filters[0]);
+            for (let i = 0; i < filters.length - 1; i++) {
+                filters[i].connect(filters[i + 1]);
+            }
+            filters[filters.length - 1].connect(ctx.destination);
+
+            isAudioContextInitialized.current = true;
+        } catch (e) {
+            console.error("Audio Context Init Failed (likely CORS or already init)", e);
+        }
+    };
+
+    // Handle EQ Change
+    const handleEqChange = (index, value) => {
+        const newBands = [...eqBands];
+        newBands[index] = parseFloat(value);
+        setEqBands(newBands);
+
+        if (filtersRef.current[index]) {
+            filtersRef.current[index].gain.value = parseFloat(value);
+        }
+    };
+
+    // Apply Presets
+    const applyPreset = (type) => {
+        let values = [0, 0, 0, 0, 0];
+        switch (type) {
+            case 'bass': values = [8, 5, 0, -2, -3]; break;
+            case 'vocal': values = [-2, -2, 4, 2, -1]; break;
+            case 'treble': values = [-3, -2, 0, 5, 8]; break;
+            default: values = [0, 0, 0, 0, 0]; // Flat
+        }
+        setEqBands(values);
+        values.forEach((v, i) => {
+            if (filtersRef.current[i]) filtersRef.current[i].gain.value = v;
+        });
+    };
+
+    // Ensure AudioContext is resumed handling user gesture
+    useEffect(() => {
+        const resumeAudio = () => {
+            if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+                audioContextRef.current.resume();
+            }
+            if (!isAudioContextInitialized.current) {
+                initAudioContext();
+            }
+        };
+        document.addEventListener('click', resumeAudio);
+        return () => document.removeEventListener('click', resumeAudio);
+    }, []);
 
     // Handle Volume Change
     useEffect(() => {
@@ -191,26 +310,60 @@ const PlayerPage = () => {
     }, []);
 
     // Helper to set CSS variables based on theme/song
-    const updateThemeVars = React.useCallback((song, lightMode) => {
-        const theme = song.theme;
-        const currentThemePalette = lightMode && theme.light ? theme.light : theme;
-        document.documentElement.style.setProperty('--color-primary', currentThemePalette.primary);
-        document.documentElement.style.setProperty('--color-secondary', currentThemePalette.secondary);
+    const updateThemeVars = React.useCallback((song, lightMode, currentThemeMode, currentManualTheme) => {
+        // Determine which theme to use
+        let themeToUse;
+        if (currentThemeMode === 'manual' && currentManualTheme) {
+            themeToUse = currentManualTheme;
+        } else {
+            themeToUse = song.theme;
+        }
 
-        // Update triangles colors for canvas
-        if (currentThemePalette.triangles) {
-            triangleColorsRef.current = currentThemePalette.triangles;
+        const currentThemePalette = lightMode && themeToUse.light ? themeToUse.light : themeToUse;
+
+        // Safety check for properties
+        if (currentThemePalette) {
+            document.documentElement.style.setProperty('--color-primary', currentThemePalette.primary);
+            document.documentElement.style.setProperty('--color-secondary', currentThemePalette.secondary);
+
+            // Update triangles colors for canvas
+            if (currentThemePalette.triangles) {
+                triangleColorsRef.current = currentThemePalette.triangles;
+            } else if (themeToUse.triangles) {
+                triangleColorsRef.current = themeToUse.triangles;
+            } else {
+                // Fallback generation from primary color if manual has no triangles defined
+                triangleColorsRef.current = ['#ffffff', '#ffffff', '#ffffff']; // Logic could be better but sufficient for now
+            }
         }
     }, []);
 
-    // Update theme when light mode or song changes
+    // Update theme when light mode or song changes or configuration changes
     useEffect(() => {
         if (activeQueue[currentSongIndex]) {
-            updateThemeVars(activeQueue[currentSongIndex], isLightMode);
+            updateThemeVars(activeQueue[currentSongIndex], isLightMode, themeMode, manualTheme);
         }
         localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
         document.body.classList.toggle('light', isLightMode);
-    }, [currentSongIndex, isLightMode, activeQueue, updateThemeVars]);
+    }, [currentSongIndex, isLightMode, activeQueue, updateThemeVars, themeMode, manualTheme]);
+
+    // Handle Theme Presets
+    const handleThemePreset = (preset) => {
+        if (preset === 'auto') {
+            setThemeMode('auto');
+            setManualTheme(null);
+        } else {
+            setThemeMode('manual');
+            const presets = {
+                miku: { primary: '50 205 255', secondary: '135 206 235', triangles: ['#32CDFF', '#87ceeb', '#ff69b4'] },
+                luka: { primary: '229 57 171', secondary: '244 161 216', triangles: ['#e539ab', '#f4a1d8', '#8e44ad'] },
+                rin: { primary: '241 196 15', secondary: '247 220 111', triangles: ['#f1c40f', '#f7dc6f', '#3498db'] },
+                gumi: { primary: '69 179 157', secondary: '46 204 113', triangles: ['#45b39d', '#2ecc71', '#f1c40f'] },
+                meiko: { primary: '192 57 43', secondary: '231 76 60', triangles: ['#c0392b', '#e74c3c', '#f1c40f'] }
+            };
+            setManualTheme(presets[preset]);
+        }
+    };
 
     // Handle Active Queue Change (Reset index if out of bounds or on switch)
     useEffect(() => {
@@ -345,6 +498,7 @@ const PlayerPage = () => {
             <audio
                 ref={audioRef}
                 src={currentSong.src}
+                crossOrigin="anonymous"
                 preload="auto"
                 onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
                 onLoadedMetadata={() => setDuration(audioRef.current.duration)}
@@ -353,7 +507,7 @@ const PlayerPage = () => {
             />
 
             <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
-                <header className="fixed top-0 left-0 right-0 z-50 p-6">
+                <header className="absolute top-0 left-0 right-0 z-50 p-6">
                     <div className="max-w-7xl mx-auto px-6">
                         <div className="flex items-center justify-between">
                             <Link to="/">
@@ -368,6 +522,13 @@ const PlayerPage = () => {
                             </Link>
 
                             <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => { setShowSettings(true); setShowPlaylist(false); setShowLyrics(false); }}
+                                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-foreground"
+                                    title="Configurações"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
+                                </button>
                                 <button id="theme-toggle" className="p-2 hover:bg-white/10 rounded-lg transition-colors" onClick={() => setIsLightMode(!isLightMode)}>
                                     <svg id="sun-icon" style={{ display: isLightMode ? 'none' : 'block' }} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
                                     <svg id="moon-icon" style={{ display: isLightMode ? 'block' : 'none' }} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
@@ -473,7 +634,7 @@ const PlayerPage = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
                                     <span className="text-xs text-muted-foreground">Adicionar</span>
                                 </div>
-                                <div className="neumorphic-icon">
+                                <div onClick={handleShare} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
                                     <span className="text-xs text-muted-foreground">Compartilhar</span>
                                 </div>
@@ -619,6 +780,132 @@ const PlayerPage = () => {
                                     Criar Playlist
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Settings / Equalizer Modal */}
+                {showSettings && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+                        <div className="player-card-glass w-full max-w-2xl border border-white/10 rounded-3xl p-8 shadow-2xl space-y-8 relative overflow-hidden">
+                            {/* Background Decoration */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
+
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">Configurações</h2>
+                                <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                </button>
+                            </div>
+
+                            {/* --- Appearance Section --- */}
+                            <section className="space-y-4">
+                                <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Aparência</h3>
+
+                                <div className="bg-white/5 rounded-2xl p-2 flex gap-2 border border-white/5">
+                                    <button
+                                        onClick={() => setIsLightMode(false)}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${!isLightMode ? 'bg-white/10 shadow-lg text-white' : 'hover:bg-white/5 text-muted-foreground'}`}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+                                        <span className="font-medium">Dark</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setIsLightMode(true)}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all ${isLightMode ? 'bg-white shadow-lg text-black' : 'hover:bg-white/5 text-muted-foreground'}`}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
+                                        <span className="font-medium">Light</span>
+                                    </button>
+                                </div>
+
+                                <div className="space-y-3 pt-2">
+                                    <label className="text-xs font-medium text-muted-foreground ml-1">Cores do Tema</label>
+                                    <div className="flex gap-4">
+                                        <button
+                                            onClick={() => handleThemePreset('auto')}
+                                            className={`h-12 w-12 rounded-full border-2 flex items-center justify-center transition-all ${themeMode === 'auto' ? 'border-primary ring-2 ring-primary/30 scale-110' : 'border-white/10 hover:border-white/30'}`}
+                                            title="Auto (Song Color)"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={themeMode === 'auto' ? 'text-primary' : 'text-muted-foreground'}><path d="M12 12c-2-2.33-3-3.5-3-5a3 3 0 0 1 6 0c0 1.5-1 2.67-3 5Z" /><path d="m12 12 4 10-4-2-4 2 4-10Z" /></svg>
+                                        </button>
+
+                                        {[
+                                            { id: 'miku', color: '#32CDFF' },
+                                            { id: 'luka', color: '#e539ab' },
+                                            { id: 'rin', color: '#f1c40f' },
+                                            { id: 'gumi', color: '#45b39d' },
+                                            { id: 'meiko', color: '#c0392b' }
+                                        ].map(swatch => (
+                                            <button
+                                                key={swatch.id}
+                                                onClick={() => handleThemePreset(swatch.id)}
+                                                className={`h-12 w-12 rounded-full border-2 transition-all flex items-center justify-center ${themeMode === 'manual' && manualTheme && manualTheme.primary.includes(swatch.color.replace('#', '').substring(0, 2)) ? 'ring-2 ring-white/50 scale-110' : 'border-transparent hover:scale-110'}`}
+                                                style={{ backgroundColor: swatch.color, borderColor: 'transparent' }}
+                                            >
+                                                {/* Simple styling for now */}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* --- Audio Section --- */}
+                            <section className="space-y-4 pt-4 border-t border-white/10">
+                                <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Áudio</h3>
+                                <div className="grid grid-cols-5 gap-4 h-64 items-end justify-items-center px-4">
+                                    {['60Hz', '250Hz', '1kHz', '4kHz', '12kHz'].map((label, idx) => (
+                                        <div key={idx} className="flex flex-col items-center gap-4 h-full w-full">
+                                            <div className="relative h-full w-full flex justify-center py-2 bg-white/5 rounded-2xl border border-white/5 shadow-inner">
+                                                <input
+                                                    type="range"
+                                                    min="-12"
+                                                    max="12"
+                                                    step="0.1"
+                                                    value={eqBands[idx]}
+                                                    onChange={(e) => handleEqChange(idx, e.target.value)}
+                                                    className="vertical-slider absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                                    title={`${label}: ${eqBands[idx]}dB`}
+                                                />
+                                                {/* Custom Visual Slider Track */}
+                                                <div className="w-1.5 h-full bg-white/10 rounded-full relative overflow-hidden pointer-events-none">
+                                                    <div
+                                                        className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary to-secondary transition-all duration-100 ease-out"
+                                                        style={{ height: `${((eqBands[idx] + 12) / 24) * 100}%` }}
+                                                    ></div>
+                                                </div>
+                                                {/* Thumb Indicator */}
+                                                <div
+                                                    className="absolute w-6 h-6 bg-white rounded-full shadow-lg border-2 border-primary pointer-events-none transition-all duration-100 ease-out flex items-center justify-center translate-y-2.5" // translate-y to center
+                                                    style={{ bottom: `${((eqBands[idx] + 12) / 24) * 100}%`, marginBottom: '-12px' }}
+                                                >
+                                                    <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                                </div>
+                                            </div>
+                                            <span className="text-xs font-medium text-muted-foreground">{label}</span>
+                                            <span className="text-xs font-bold font-mono">{eqBands[idx] > 0 ? `+${eqBands[idx].toFixed(0)}` : eqBands[idx].toFixed(0)}dB</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex gap-2 justify-center pt-4">
+                                    {[
+                                        { id: 'flat', label: 'Flat', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12" /></svg> },
+                                        { id: 'bass', label: 'Bass Boost', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20" /><path d="M6 16V4" /><path d="M10 16v-4" /><path d="M14 16v-8" /><path d="M18 16v-2" /></svg> },
+                                        { id: 'vocal', label: 'Vocal', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" x2="12" y1="19" y2="22" /></svg> },
+                                        { id: 'treble', label: 'Treble', icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20" /><path d="M6 16v-2" /><path d="M10 16v-4" /><path d="M14 16V4" /><path d="M18 16v-6" /></svg> }
+                                    ].map(preset => (
+                                        <button
+                                            key={preset.id}
+                                            onClick={() => applyPreset(preset.id)}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 hover:text-primary transition-all active:scale-95 border border-white/5"
+                                        >
+                                            {preset.icon}
+                                            <span className="text-sm font-medium">{preset.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </section>
                         </div>
                     </div>
                 )}
