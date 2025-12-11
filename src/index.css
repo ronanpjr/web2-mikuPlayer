@@ -1,0 +1,682 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        background-image: url('/public/assets/images/dark-bg.jpg');
+        /* Updated path */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    #background-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(24, 24, 27, 0.6), rgba(24, 24, 27, 0.9));
+        z-index: -2;
+    }
+
+    body.light #background-overlay {
+        background: linear-gradient(to bottom, rgba(244, 244, 245, 0.6), rgba(244, 244, 245, 0.9));
+    }
+}
+
+
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/public/assets/fonts/gilroy/Gilroy-Light.ttf') format('truetype');
+    /* Updated path */
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/public/assets/fonts/gilroy/Gilroy-Regular.ttf') format('truetype');
+    /* Updated path */
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/public/assets/fonts/gilroy/Gilroy-Bold.ttf') format('truetype');
+    /* Updated path */
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy';
+    src: url('/public/assets/fonts/gilroy/Gilroy-Black.ttf') format('truetype');
+    /* Updated path */
+    font-weight: 900;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Gilroy', sans-serif;
+    color: var(--text-color);
+}
+
+:root {
+    --color-background: 24 24 27;
+    /* Zinc 900 */
+    --color-foreground: 244 245 245;
+    /* Zinc 100 */
+    --color-card: 39 39 42;
+    /* Zinc 800 */
+    --color-muted-foreground: 161 161 170;
+    /* Zinc 400 */
+
+    /* Miku azul */
+    --color-primary: 50 205 255;
+    --color-secondary: 135 206 235;
+    --theme-shadow: rgba(50, 205, 255, 0.4);
+
+    /* Mac */
+    --icon-bg: 50 50 55;
+    --icon-border: 80 80 90;
+    --icon-text: 244 244 245;
+    --icon-shadow: rgba(0, 0, 0, 0.4);
+
+    /* Landing Page Variables */
+    --body-bg: #1a1a2e;
+    --text-color: white;
+    --icon-color: white;
+    --triangle-opacity: 0.6;
+    --background-image-opacity: 0.88;
+    --background-overlay: linear-gradient(to bottom, rgba(24, 24, 27, 0.6), rgba(24, 24, 27, 0.9));
+}
+
+body.light {
+    --color-background: 244 244 245;
+    /* Zinc 100 */
+    --color-foreground: 24 24 27;
+    /* Zinc 900 */
+    --color-card: 255 255 255;
+    /* White */
+    --color-muted-foreground: 113 113 122;
+    /* Zinc 500 */
+
+    --icon-bg: 255 255 255;
+    --icon-border: 200 200 205;
+    --icon-text: 24 24 27;
+    --icon-shadow: rgba(0, 0, 0, 0.15);
+
+    /* Landing Page Light Theme */
+    --body-bg: #f0f2f5;
+    --text-color: #1a1a2e;
+    --icon-color: #1a1a2e;
+    --triangle-opacity: 0.3;
+    --background-image-opacity: 0.5;
+    --background-overlay: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(240, 242, 245, 0.7), rgba(230, 235, 240, 0.8));
+}
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.mac-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    padding: 0.5rem;
+}
+
+.mac-icon-item:hover {
+    transform: translateY(-2px);
+}
+
+.mac-icon-item .icon-wrapper {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    background-color: rgb(var(--icon-bg));
+    border: 1px solid rgba(var(--icon-border), 0.7);
+    box-shadow: 0px 4px 8px var(--icon-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mac-icon-item .icon-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mac-icon-item p {
+    font-size: 0.875rem;
+    color: rgb(var(--icon-text));
+    font-weight: normal;
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+#playlist-grid .grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.0rem;
+}
+
+.neumorphic-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+}
+
+.neumorphic-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: -1;
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.1),
+        inset -1px -1px 1px rgba(0, 0, 0, 0.2),
+        5px 5px 10px rgba(0, 0, 0, 0.3),
+        -5px -5px 10px rgba(255, 255, 255, 0.05);
+}
+
+body.light .neumorphic-icon::before {
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.7),
+        inset -1px -1px 1px rgba(0, 0, 0, 0.05),
+        5px 5px 10px rgba(0, 0, 0, 0.1),
+        -5px -5px 10px rgba(255, 255, 255, 0.7);
+}
+
+.neumorphic-icon:hover {
+    transform: translateY(-2px);
+}
+
+.neumorphic-icon:active {
+    transform: translateY(1px);
+}
+
+.neumorphic-icon:active::before {
+    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.2),
+        inset 5px 5px 10px rgba(255, 255, 255, 0.1);
+}
+
+.player-card-glass {
+    position: relative;
+    overflow: hidden;
+}
+
+.player-card-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: -1;
+}
+
+body.light .player-card-glass::before {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+#playlist-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 1.25rem;
+    aspect-ratio: 1 / 1;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+}
+
+#playlist-toggle:hover {
+    transform: translateY(-2px);
+}
+
+
+.folder-icon {
+    width: 90%;
+    height: 70%;
+    position: relative;
+    background: linear-gradient(to bottom right,
+            rgb(var(--color-primary)),
+            rgb(var(--color-secondary)));
+
+    border-radius: 12px 30px 30px 30px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease-in-out;
+}
+
+.folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 50%;
+    height: 20%;
+    background: linear-gradient(to bottom right,
+            rgb(var(--color-primary)),
+            rgb(var(--color-secondary)));
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+#playlist-toggle:hover .folder-icon {
+    transform: scale(1.03) translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+#playlist-toggle:active .folder-icon {
+    transform: scale(0.98) translateY(0px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- LANDING PAGE STYLES (Merged from landing.css) --- */
+
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: var(--background-image-opacity);
+    transition: opacity 0.3s;
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-overlay);
+    transition: background 0.3s;
+}
+
+.gradient-triangle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.triangle-svg {
+    position: absolute;
+    bottom: 0;
+    right: -40%;
+    width: 150%;
+    height: auto;
+    transform: translateY(40%);
+    opacity: var(--triangle-opacity);
+    transition: opacity 0.3s;
+}
+
+.decorative-triangles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.main-content {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.logo-text {
+    font-size: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+.hero-section {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    position: static;
+    padding-top: 1rem;
+    z-index: 20;
+}
+
+.left-content {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.main-title {
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+    max-width: 90%;
+    margin-bottom: 1.5rem;
+}
+
+.cta-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.play-now-button {
+    width: auto;
+    padding: 0.7rem 1.6rem;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #d713f1, #00ddc0);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    transition: transform 0.3s;
+    box-shadow: 0 4px 6px rgba(215, 19, 241, 0.3);
+    border: none;
+    cursor: pointer;
+}
+
+.play-now-button a {
+    color: white;
+    text-decoration: none;
+}
+
+.play-now-button:hover {
+    transform: scale(1.05);
+}
+
+.platform-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--icon-color);
+}
+
+.icon-button {
+    transition: transform 0.3s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.icon-button:hover {
+    transform: scale(1.1);
+}
+
+.icon {
+    width: 2.1rem;
+    height: 2.1rem;
+    color: var(--text-color)
+}
+
+.icon.apple {
+    width: 1.8rem;
+    height: 1.8rem;
+}
+
+.right-content {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    height: 60%;
+    max-width: 300px;
+    max-height: 40vh;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.character-image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.character-image {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    object-position: bottom right;
+    filter: drop-shadow(20px 10px 30px rgba(0, 0, 0, 0.25));
+}
+
+.bottom-heartbeat {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3rem;
+    z-index: 3;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.heartbeat-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heartbeat-image {
+    height: 100%;
+    width: auto;
+    opacity: 0.7;
+}
+
+/* --- THEME BUTTON STYLES --- */
+#theme-toggle-button {
+    background: none;
+    border: none;
+    color: var(--icon-color);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.sun-icon {
+    display: none;
+    /* Hidden by default */
+}
+
+.moon-icon {
+    display: block;
+    /* Shown by default */
+}
+
+body.light .sun-icon {
+    display: block;
+    /* Show sun in light theme */
+}
+
+body.light .moon-icon {
+    display: none;
+    /* Hide moon in light theme */
+}
+
+
+/* --- Desktop --- */
+@media (min-width: 1024px) {
+    .main-content {
+        padding: 2rem 8rem;
+    }
+
+    .hero-section {
+        flex-direction: row;
+        align-items: flex-start;
+        padding-top: 10vh;
+    }
+
+    .left-content {
+        width: 45%;
+    }
+
+    .main-title {
+        font-size: 12.5rem;
+        margin-top: -2vh;
+    }
+
+    .description {
+        font-size: 1.1rem;
+        max-width: 36rem;
+        margin-bottom: 2rem;
+    }
+
+    .cta-section {
+        gap: 3rem;
+    }
+
+    .play-now-button {
+        padding: 1rem 3rem;
+        font-size: 2rem;
+    }
+
+    .play-now-button a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .icon {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .icon.apple {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .right-content {
+        position: absolute;
+        width: 65%;
+        height: 80vh;
+        max-width: none;
+        max-height: none;
+        bottom: 0;
+        right: 0;
+    }
+
+    .gradient-triangle {
+        left: 30%;
+    }
+
+    .character-image {
+        filter: drop-shadow(43px 22px 60px rgba(0, 0, 0, 0.25));
+    }
+
+    .bottom-heartbeat {
+        height: 11rem;
+        opacity: 1;
+        left: -75vw;
+
+    }
+
+    .triangle-svg {
+        top: -50%;
+        right: 0;
+        width: 110%;
+        transform: translateY(0);
+        bottom: auto;
+    }
+}
