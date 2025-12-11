@@ -74,7 +74,7 @@ const VocaloidsPage = () => {
         <div className="text-foreground transition-colors duration-300 ease-in-out min-h-screen">
             <div id="background-overlay"></div>
 
-            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
+            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-10 pb-12">
                 <Header
                     isLightMode={isLightMode}
                     onToggleTheme={() => {

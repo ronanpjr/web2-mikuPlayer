@@ -14,9 +14,9 @@ const Header = ({
     onSettingsClick
 }) => {
     return (
-        <header className="absolute top-0 left-0 right-0 z-50 p-6">
-            <div className="w-full px-6">
-                <div className="flex items-center justify-between">
+        <header className=" top-0 left-0 right-0 py-4 px-0 z-50  m-0">
+            <div className="w-full px-0">
+                <div className="flex items-center justify-between w-full p-0 m-0">
                     <Link to="/">
                         <div className="flex items-center gap-3">
                             <img
@@ -24,7 +24,8 @@ const Header = ({
                                 alt="Miku Icon"
                                 className="logo-icon"
                             />
-                            <h1 className="text-xl tracking-wider">MIKU MIKU MUSIC</h1>
+                            {/* Added 'hidden md:block' to hide on mobile and show on desktop */}
+                            <h1 className="hidden md:block text-xl tracking-wider">MIKU MIKU MUSIC</h1>
                         </div>
                     </Link>
 
