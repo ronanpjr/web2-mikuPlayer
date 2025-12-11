@@ -128,18 +128,18 @@ const VocaloidProfilePage = () => {
 
     // Full playlist
     const playlist = [
-        { title: "World is Mine", artist: "ryo (supercell)", index: 0 },
-        { title: "Echo", artist: "Crusher-P", index: 1 },
-        { title: "Remote Control", artist: "Jesus-P", index: 2 },
-        { title: "Just Be Friends", artist: "Dixie Flatline", index: 3 },
-        { title: "Yoshiwara Lament", artist: "Asa-P", index: 4 },
-        { title: "Ghost Rule", artist: "DECO*27", index: 5 },
-        { title: "Luka Luka Night Fever", artist: "ryo (supercell)", index: 6 },
-        { title: "PPPP", artist: "Tak", index: 7 },
-        { title: "BIRDBRAIN", artist: "JamieP", index: 8 },
-        { title: "Copycat", artist: "Circus-P", index: 9 },
-        { title: "劣等上等", artist: "GIGA", index: 10 },
-        { title: "ギガンティックO.T.N", artist: "GIGA", index: 11 }
+        { title: "World is Mine", artist: "ryo (supercell)", art: "/assets/images/world_is_mine.png", index: 0 },
+        { title: "Echo", artist: "Crusher-P", art: "/assets/images/echo.png", index: 1 },
+        { title: "Remote Control", artist: "Jesus-P", art: "/assets/images/remote_control.png", index: 2 },
+        { title: "Just Be Friends", artist: "Dixie Flatline", art: "/assets/images/just_be_friends.png", index: 3 },
+        { title: "Yoshiwara Lament", artist: "Asa-P", art: "/assets/images/yoshiwara_lament.png", index: 4 },
+        { title: "Ghost Rule", artist: "DECO*27", art: "/assets/images/ghost_rule.png", index: 5 },
+        { title: "Luka Luka Night Fever", artist: "ryo (supercell)", art: "/assets/images/luka_night.png", index: 6 },
+        { title: "PPPP", artist: "Tak", art: "/assets/images/PPPP.png", index: 7 },
+        { title: "BIRDBRAIN", artist: "JamieP", art: "/assets/images/birdbrain.png", index: 8 },
+        { title: "Copycat", artist: "Circus-P", art: "/assets/images/copycat.png", index: 9 },
+        { title: "劣等上等", artist: "GIGA", art: "/assets/images/rettou.png", index: 10 },
+        { title: "ギガンティックO.T.N", artist: "GIGA", art: "/assets/images/otn.png", index: 11 }
     ];
 
     const vocaloid = vocaloidData[vocaloidId];
@@ -249,16 +249,18 @@ const VocaloidProfilePage = () => {
                         <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500 delay-200">
                             {/* Name Header */}
                             <div>
-                                <h2
-                                    className="text-6xl font-black mb-2"
-                                    style={{ color: vocaloid.color }}
-                                >
-                                    {vocaloid.nameJp}
-                                </h2>
-                                <p className="text-3xl font-bold text-muted-foreground uppercase tracking-wider">
-                                    {vocaloid.name}
-                                </p>
-                                <p className="text-sm text-muted-foreground mt-1">CV: {vocaloid.cv}</p>
+                                <div className="flex items-baseline gap-4 flex-wrap">
+                                    <h2
+                                        className="text-6xl font-black"
+                                        style={{ color: vocaloid.color }}
+                                    >
+                                        {vocaloid.nameJp}
+                                    </h2>
+                                    <p className="text-3xl font-bold text-muted-foreground uppercase tracking-wider">
+                                        {vocaloid.name}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">CV: {vocaloid.cv}</p>
+                                </div>
                             </div>
 
                             {/* Profile Card */}
@@ -344,7 +346,7 @@ const VocaloidProfilePage = () => {
                                     </svg>
                                     Featured Songs
                                 </h3>
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                     {vocaloid.songs.map((songTitle) => {
                                         const song = playlist.find(s => s.title === songTitle);
                                         if (!song) return null;

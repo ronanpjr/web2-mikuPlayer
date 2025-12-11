@@ -152,7 +152,7 @@ const LandingPage = () => {
                                 </p>
                             </div>
                             <div className="cta-section">
-                                <button className="play-now-button"><Link to="/player">LISTEN NOW</Link></button>
+                                <Link to="/player" className="play-now-button inline-block text-center no-underline">LISTEN NOW</Link>
                                 <div className="platform-icons">
                                     <button className="icon-button">
                                         <svg
