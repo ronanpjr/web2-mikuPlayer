@@ -196,7 +196,11 @@ const VocaloidProfilePage = () => {
             <div id="background-overlay"></div>
 
             <main className="relative z-10 min-h-screen">
-                <Header
+                
+
+                {/* Profile */}
+                <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-12">
+                    <Header
                     isLightMode={isLightMode}
                     onToggleTheme={() => {
                         const newMode = !isLightMode;
@@ -207,9 +211,6 @@ const VocaloidProfilePage = () => {
                     showVocaloidsLink={true}
                     showPlayerLink={true}
                 />
-
-                {/* Profile */}
-                <div className="max-w-[1400px] mx-auto px-6 pt-32 pb-12">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch min-h-[calc(100vh-12rem)]">
                         {/* Left: Character Image */}
                         <div
