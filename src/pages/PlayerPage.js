@@ -5,6 +5,7 @@ import Lyrics from '../components/Lyrics';
 import Header from '../components/Header';
 import PlayerControls from '../components/PlayerControls';
 import ActionButton from '../components/ActionButton';
+import TrianglesBackground from '../components/TrianglesBackground';
 import SongIcon from '../components/SongIcon';
 
 const PlayerPage = () => {
@@ -206,8 +207,9 @@ const PlayerPage = () => {
     // Note: Playlist Creation State moved up to use in activeQueue memo
 
     const audioRef = useRef(null);
-    const canvasRef = useRef(null);
-    const triangleColorsRef = useRef(['#32CDFF', '#87ceeb', '#ff69b4']); // Default
+
+    // const canvasRef = useRef(null); // Canvas handled by component
+    const [triangleColors, setTriangleColors] = useState(['#32CDFF', '#87ceeb', '#ff69b4']); // Changed to state for prop passing
 
     // Equalizer State & Refs
     const [showSettings, setShowSettings] = useState(false);
@@ -358,12 +360,12 @@ const PlayerPage = () => {
 
             // Update triangles colors for canvas
             if (currentThemePalette.triangles) {
-                triangleColorsRef.current = currentThemePalette.triangles;
+                setTriangleColors(currentThemePalette.triangles);
             } else if (themeToUse.triangles) {
-                triangleColorsRef.current = themeToUse.triangles;
+                setTriangleColors(themeToUse.triangles);
             } else {
-                // Fallback generation from primary color if manual has no triangles defined
-                triangleColorsRef.current = ['#ffffff', '#ffffff', '#ffffff']; // Logic could be better but sufficient for now
+                // Fallback generation
+                setTriangleColors(['#ffffff', '#ffffff', '#ffffff']);
             }
         }
     }, []);
@@ -458,84 +460,14 @@ const PlayerPage = () => {
     };
 
     // Canvas Animation
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let animationFrameId;
-
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Triangle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 20 + 10;
-                this.color = triangleColorsRef.current[Math.floor(Math.random() * triangleColorsRef.current.length)];
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.angle = Math.random() * Math.PI * 2;
-                this.rotationSpeed = (Math.random() - 0.5) * 0.01;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.angle += this.rotationSpeed;
-
-                if (this.x < -this.size) this.x = canvas.width + this.size;
-                if (this.x > canvas.width + this.size) this.x = -this.size;
-                if (this.y < -this.size) this.y = canvas.height + this.size;
-                if (this.y > canvas.height + this.size) this.y = -this.size;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle);
-                ctx.beginPath();
-                ctx.moveTo(0, -this.size / 1.5);
-                ctx.lineTo(-this.size / 1.5, this.size / 1.5);
-                ctx.lineTo(this.size / 1.5, this.size / 1.5);
-                ctx.closePath();
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = 0.5;
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // Initialize triangles
-        let triangles = [];
-        for (let i = 0; i < 50; i++) triangles.push(new Triangle());
-
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            triangles.forEach(triangle => {
-                triangle.update();
-                triangle.draw();
-            });
-            animationFrameId = requestAnimationFrame(animate);
-        };
-        animate();
-
-        return () => {
-            window.removeEventListener('resize', resizeCanvas);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, []);
+    // Canvas Animation moved to TrianglesBackground component
 
     const currentSong = activeQueue[currentSongIndex] || playlist[0];
 
     return (
         <div className="text-foreground transition-colors duration-300 ease-in-out">
             <div id="background-overlay"></div>
-            <canvas id="bg-canvas" ref={canvasRef}></canvas>
+            <TrianglesBackground colors={triangleColors} />
             <audio
                 ref={audioRef}
                 src={currentSong.src}
@@ -547,7 +479,7 @@ const PlayerPage = () => {
                 onError={(e) => console.error("Audio error", e)}
             />
 
-            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
+            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-10 pb-12">
                 <Header
                     isLightMode={isLightMode}
                     onToggleTheme={() => setIsLightMode(!isLightMode)}
