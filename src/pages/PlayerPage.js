@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Lyrics from '../components/Lyrics';
+import Header from '../components/Header';
+import PlayerControls from '../components/PlayerControls';
+import ActionButton from '../components/ActionButton';
+import SongIcon from '../components/SongIcon';
 
 const PlayerPage = () => {
     // Playlist data from player.js
@@ -536,42 +540,13 @@ const PlayerPage = () => {
             />
 
             <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
-                <header className="absolute top-0 left-0 right-0 z-50 p-6">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="flex items-center justify-between">
-                            <Link to="/">
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src={isLightMode ? "/assets/images/logo-black.png" : "/assets/images/logo-white.png"}
-                                        alt="Miku Icon"
-                                        className="logo-icon"
-                                    />
-                                    <h1 className="text-xl tracking-wider">MIKU MIKU MUSIC</h1>
-                                </div>
-                            </Link>
-
-                            <div className="flex items-center gap-4">
-                                <Link
-                                    to="/vocaloids"
-                                    className="px-4 py-2 rounded-lg bg-primary/20 hover:bg-primary/30 transition-colors text-sm font-medium"
-                                >
-                                    Vocaloids
-                                </Link>
-                                <button
-                                    onClick={() => { setShowSettings(true); setShowPlaylist(false); setShowLyrics(false); }}
-                                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-foreground"
-                                    title="Configurações"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
-                                </button>
-                                <button id="theme-toggle" className="p-2 hover:bg-white/10 rounded-lg transition-colors" onClick={() => setIsLightMode(!isLightMode)}>
-                                    <svg id="sun-icon" style={{ display: isLightMode ? 'none' : 'block' }} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
-                                    <svg id="moon-icon" style={{ display: isLightMode ? 'block' : 'none' }} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <Header
+                    isLightMode={isLightMode}
+                    onToggleTheme={() => setIsLightMode(!isLightMode)}
+                    showVocaloidsLink={true}
+                    showSettingsButton={true}
+                    onSettingsClick={() => { setShowSettings(true); setShowPlaylist(false); setShowLyrics(false); }}
+                />
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div className="lg:col-span-1">
@@ -605,53 +580,16 @@ const PlayerPage = () => {
 
 
 
-                                    <div className="flex items-center justify-center gap-4">
-                                        <button className="p-2 hover:text-primary transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M17 2.1l4 4-4 4" /><path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8" /><path d="M7 21.9l-4-4 4-4" /><path d="M21 11.8v2a4 4 0 0 1-4 4H4.2" /></svg></button>
-                                        <button onClick={prevSong} id="prev-button" className="p-2 hover:text-primary transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><polygon points="19 20 9 12 19 4 19 20" /><line x1="5" x2="5" y1="19" y2="5" /></svg></button>
-                                        <button onClick={() => setIsPlaying(!isPlaying)} id="play-pause-button" className="w-14 h-14 rounded-full bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-secondary/50">
-                                            {isPlaying ? (
-                                                <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="4" height="16" x="6" y="4" /><rect width="4" height="16" x="14" y="4" /></svg>
-                                            ) : (
-                                                <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 ml-1"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                                            )}
-                                        </button>
-                                        <button onClick={nextSong} id="next-button" className="p-2 hover:text-primary transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><polygon points="5 4 15 12 5 20 5 4" /><line x1="19" x2="19" y1="5" y2="19" /></svg></button>
-
-                                        {/* Volume Control */}
-                                        <div className="relative flex items-center justify-center">
-                                            <button
-                                                onClick={() => setShowVolume(!showVolume)}
-                                                className="p-2 hover:text-primary transition-colors text-muted-foreground hover:bg-white/5 rounded-full"
-                                                title="Volume"
-                                            >
-                                                {volume === 0 ? (
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" x2="17" y1="9" y2="15" /><line x1="17" x2="23" y1="9" y2="15" /></svg>
-                                                ) : volume < 0.5 ? (
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
-                                                ) : (
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>
-                                                )}
-                                            </button>
-
-                                            {/* Vertical Slider Popup */}
-                                            {showVolume && (
-                                                <div className="absolute bottom-full mb-2 p-3 bg-card border border-white/10 rounded-xl shadow-xl animate-in fade-in slide-in-from-bottom-2 z-50">
-                                                    <div className="h-32 w-8 flex items-center justify-center">
-                                                        <input
-                                                            type="range"
-                                                            min="0"
-                                                            max="1"
-                                                            step="0.01"
-                                                            value={volume}
-                                                            onChange={(e) => setVolume(parseFloat(e.target.value))}
-                                                            className="h-24 w-1 rounded-full appearance-none cursor-pointer accent-primary bg-muted-foreground/30 -rotate-90 origin-center"
-                                                            style={{ width: '6rem' }} // Width becomes height when rotated
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
+                                    <PlayerControls
+                                        isPlaying={isPlaying}
+                                        onPlayPause={() => setIsPlaying(!isPlaying)}
+                                        onPrev={prevSong}
+                                        onNext={nextSong}
+                                        volume={volume}
+                                        onVolumeChange={setVolume}
+                                        showVolume={showVolume}
+                                        onToggleVolume={() => setShowVolume(!showVolume)}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -665,25 +603,31 @@ const PlayerPage = () => {
                                     <div className="folder-icon"></div>
                                     <span className="text-xs text-muted-foreground group-hover:text-foreground">Minhas favoritas</span>
                                 </button>
-                                <div onClick={() => setShowCreatePlaylistModal(true)} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                                    <span className="text-xs text-muted-foreground">Adicionar</span>
-                                </div>
-                                <div onClick={handleShare} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
-                                    <span className="text-xs text-muted-foreground">Compartilhar</span>
-                                </div>
-                                <div onClick={() => setShowStats(true)} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                                    <span className="text-xs text-muted-foreground">Perfil</span>
-                                </div>
-                                <button
+
+                                <ActionButton
+                                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M5 12h14" /><path d="M12 5v14" /></svg>}
+                                    label="Adicionar"
+                                    onClick={() => setShowCreatePlaylistModal(true)}
+                                />
+
+                                <ActionButton
+                                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>}
+                                    label="Compartilhar"
+                                    onClick={handleShare}
+                                />
+
+                                <ActionButton
+                                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>}
+                                    label="Perfil"
+                                    onClick={() => setShowStats(true)}
+                                />
+
+                                <ActionButton
+                                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 group-hover:text-foreground"><path d="M12 6.52c.82-.9 2.05-1.52 3.5-1.52 2.76 0 5 2.24 5 5 0 3.15-2.5 5.5-5 5.5-1.45 0-2.68-.62-3.5-1.52-.82.9-2.05 1.52-3.5 1.52-2.76 0-5-2.24-5-5 0-3.15 2.5-5.5 5-5.5 1.45 0 2.68.62 3.5 1.52z" /><path d="m12 12.5-2.5 3" /><path d="m14.5 15.5 2.5-3" /></svg>}
+                                    label="Letras"
                                     onClick={() => { setShowLyrics(!showLyrics); setShowPlaylist(false); }}
-                                    className={`neumorphic-icon group ${showLyrics ? 'text-primary' : ''}`}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 group-hover:text-foreground"><path d="M12 6.52c.82-.9 2.05-1.52 3.5-1.52 2.76 0 5 2.24 5 5 0 3.15-2.5 5.5-5 5.5-1.45 0-2.68-.62-3.5-1.52-.82.9-2.05 1.52-3.5 1.52-2.76 0-5-2.24-5-5 0-3.15 2.5-5.5 5-5.5 1.45 0 2.68.62 3.5 1.52z" /><path d="m12 12.5-2.5 3" /><path d="m14.5 15.5 2.5-3" /></svg>
-                                    <span className={`text-xs text-muted-foreground group-hover:text-foreground ${showLyrics ? 'text-foreground font-bold' : ''}`}>Letras</span>
-                                </button>
+                                    isActive={showLyrics}
+                                />
                             </div>
                         </section>
 
@@ -711,12 +655,12 @@ const PlayerPage = () => {
                             </div>
                             <div className="grid grid-cols-3 md:grid-cols-4 gap-y-2 gap-x-2">
                                 {activeQueue.map((song, index) => (
-                                    <div key={index} className={`mac-icon-item ${currentSongIndex === index ? 'active-song ring-2 ring-primary/50 rounded-xl' : ''}`} onClick={() => { setCurrentSongIndex(index); setIsPlaying(true); setShowPlaylist(false); }}>
-                                        <div className="icon-wrapper">
-                                            <img src={song.art} alt={song.title} />
-                                        </div>
-                                        <p>{song.title}</p>
-                                    </div>
+                                    <SongIcon
+                                        key={index}
+                                        song={song}
+                                        isActive={currentSongIndex === index}
+                                        onClick={() => { setCurrentSongIndex(index); setIsPlaying(true); setShowPlaylist(false); }}
+                                    />
                                 ))}
                             </div>
                         </section>

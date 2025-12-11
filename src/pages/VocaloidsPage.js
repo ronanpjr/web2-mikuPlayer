@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 
 const VocaloidsPage = () => {
     const [isLightMode, setIsLightMode] = useState(false);
@@ -74,80 +75,16 @@ const VocaloidsPage = () => {
             <div id="background-overlay"></div>
 
             <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
-                <header className="absolute top-0 left-0 right-0 z-50 p-6">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="flex items-center justify-between">
-                            <Link to="/">
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src={isLightMode ? "/assets/images/logo-black.png" : "/assets/images/logo-white.png"}
-                                        alt="Miku Icon"
-                                        className="logo-icon"
-                                    />
-                                    <h1 className="text-xl tracking-wider">MIKU MIKU MUSIC</h1>
-                                </div>
-                            </Link>
-
-                            <div className="flex items-center gap-4">
-                                <Link
-                                    to="/player"
-                                    className="px-4 py-2 rounded-lg bg-primary/20 hover:bg-primary/30 transition-colors text-sm font-medium"
-                                >
-                                    Player
-                                </Link>
-                                <button
-                                    id="theme-toggle"
-                                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                                    onClick={() => {
-                                        const newMode = !isLightMode;
-                                        setIsLightMode(newMode);
-                                        document.body.classList.toggle('light', newMode);
-                                        localStorage.setItem('theme', newMode ? 'light' : 'dark');
-                                    }}
-                                >
-                                    <svg
-                                        style={{ display: isLightMode ? 'none' : 'block' }}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="w-6 h-6"
-                                    >
-                                        <circle cx="12" cy="12" r="4" />
-                                        <path d="M12 2v2" />
-                                        <path d="M12 20v2" />
-                                        <path d="m4.93 4.93 1.41 1.41" />
-                                        <path d="m17.66 17.66 1.41 1.41" />
-                                        <path d="M2 12h2" />
-                                        <path d="M20 12h2" />
-                                        <path d="m6.34 17.66-1.41 1.41" />
-                                        <path d="m19.07 4.93-1.41 1.41" />
-                                    </svg>
-                                    <svg
-                                        style={{ display: isLightMode ? 'block' : 'none' }}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="w-6 h-6"
-                                    >
-                                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <Header
+                    isLightMode={isLightMode}
+                    onToggleTheme={() => {
+                        const newMode = !isLightMode;
+                        setIsLightMode(newMode);
+                        document.body.classList.toggle('light', newMode);
+                        localStorage.setItem('theme', newMode ? 'light' : 'dark');
+                    }}
+                    showPlayerLink={true}
+                />
 
                 {/* Page Header */}
                 <div className="text-center mb-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
