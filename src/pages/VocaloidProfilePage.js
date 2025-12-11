@@ -23,6 +23,7 @@ const VocaloidProfilePage = () => {
             description: 'The world\'s most famous virtual idol and pop sensation. With her iconic teal twin-tails and energetic performances, Miku has inspired millions of songs and performances worldwide.',
             personality: 'とても内気で、自分に自信がない少女。ある日、偶然通りがかったライブカフェ&バーで杏とミュージシャンがセッションしているのを目撃。',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            imagelong:"/assets/images/profile/miku.png",
             songs: ['World is Mine', 'Echo', 'Ghost Rule', 'PPPP'],
             voiceBank: 'Crypton Future Media',
             debut: '2007',
@@ -42,6 +43,7 @@ const VocaloidProfilePage = () => {
             description: 'A mature and sophisticated vocalist with a calm presence. Luka is bilingual in Japanese and English, known for her smooth, soulful voice.',
             personality: 'Elegant and composed, Luka brings a mature sophistication to every performance. She has a gentle demeanor but powerful stage presence.',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            imagelong:"/assets/images/profile/luka.png",
             songs: ['Just Be Friends', 'Luka Luka Night Fever'],
             voiceBank: 'Crypton Future Media',
             debut: '2009',
@@ -61,6 +63,7 @@ const VocaloidProfilePage = () => {
             description: 'Energetic mirror twins with vibrant personalities. Rin and Len are known for their powerful harmonies and dynamic performances.',
             personality: 'Playful and energetic, these twins complement each other perfectly. Rin is bold and outgoing, while Len is cool and reserved.',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            imagelong:"/assets/images/profile/rinlen.png",
             songs: ['Remote Control', '劣等上等'],
             voiceBank: 'Crypton Future Media',
             debut: '2007',
@@ -80,6 +83,7 @@ const VocaloidProfilePage = () => {
             description: 'A versatile vocalist with a sweet, expressive voice. GUMI is known for her wide vocal range and ability to sing various genres.',
             personality: 'Sweet and cheerful, GUMI has an infectious energy that shines through her performances. She\'s friendly and approachable.',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            imagelong:"/assets/images/profile/gumi.png",
             songs: ['Copycat', 'Echo'],
             voiceBank: 'Internet Co., Ltd.',
             debut: '2009',
@@ -99,7 +103,8 @@ const VocaloidProfilePage = () => {
             description: 'Originally an April Fools\' joke, Teto became a beloved UTAU character. A 31-year-old chimera with distinctive twin drills.',
             personality: 'Despite her age, Teto has a youthful spirit. She started as a joke but became a symbol of community-driven creativity.',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
-            songs: ['Yoshiwara Lament'],
+            imagelong:"/assets/images/profile/teto.png",
+            songs: ['Yoshiwara Lament', 'BIRDBRAIN', 'PPPP'],
             voiceBank: 'UTAU/SynthV',
             debut: '2008',
             likes: 'Bread (French bread), Singing',
@@ -118,6 +123,7 @@ const VocaloidProfilePage = () => {
             description: 'A blue-haired gentleman with a smooth, deep voice. One of the original Vocaloids and a certified ice cream enthusiast.',
             personality: 'Cool and collected on the outside, but has a warm heart. Known for his love of ice cream and his gentle demeanor.',
             image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            imagelong:"/assets/images/profile/kaito.png",
             songs: ['ギガンティックO.T.N', 'BIRDBRAIN'],
             voiceBank: 'Crypton Future Media',
             debut: '2006',
@@ -202,47 +208,27 @@ const VocaloidProfilePage = () => {
                     showPlayerLink={true}
                 />
 
-                {/* Profile Content */}
+                {/* Profile */}
                 <div className="max-w-[1400px] mx-auto px-6 pt-32 pb-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-12rem)]">
-                        {/* Left: Character Image with Round Style */}
-                        <div className="flex items-center justify-center">
-                            <div className="relative">
-                                {/* Circular gradient background */}
-                                <div
-                                    className="absolute inset-0 rounded-full blur-3xl opacity-30"
-                                    style={{
-                                        background: `radial-gradient(circle, ${vocaloid.color}, transparent 70%)`,
-                                        transform: 'scale(1.2)'
-                                    }}
-                                ></div>
-
-                                {/* Character circle */}
-                                <div className="relative w-[500px] h-[500px] rounded-full overflow-hidden border-8 shadow-2xl animate-in zoom-in duration-500"
-                                    style={{ borderColor: vocaloid.color }}
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-br opacity-20"
-                                        style={{
-                                            background: `linear-gradient(135deg, ${vocaloid.color}, transparent)`
-                                        }}
-                                    ></div>
-                                    <img
-                                        src={vocaloid.image}
-                                        alt={vocaloid.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-
-                                {/* Decorative elements */}
-                                <div
-                                    className="absolute -top-4 -right-4 w-24 h-24 rounded-full opacity-50 blur-xl"
-                                    style={{ backgroundColor: vocaloid.color }}
-                                ></div>
-                                <div
-                                    className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-40 blur-xl"
-                                    style={{ backgroundColor: vocaloid.color }}
-                                ></div>
-                            </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch min-h-[calc(100vh-12rem)]">
+                        {/* Left: Character Image */}
+                        <div
+                            className="relative h-full min-h-[600px] w-full rounded-3xl overflow-hidden"
+                            // Add the mask-image style here.
+                            // It creates a gradient from opaque (black) at the top to transparent at the bottom.
+                            style={{
+                                WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+                                maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)'
+                            }}
+                        >
+                            <img
+                                src={vocaloid.imagelong}
+                                alt={vocaloid.name}
+                                className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700"
+                                style={{
+                                    filter: `drop-shadow(0 0 20px ${vocaloid.color}40)`
+                                }}
+                            />
                         </div>
 
                         {/* Right: Profile Info */}
@@ -251,8 +237,11 @@ const VocaloidProfilePage = () => {
                             <div>
                                 <div className="flex items-baseline gap-4 flex-wrap">
                                     <h2
-                                        className="text-6xl font-black"
-                                        style={{ color: vocaloid.color }}
+                                        className="text-6xl font-black text-transparent bg-clip-text pb-2"
+                                        style={{
+                
+                                        backgroundImage: `linear-gradient(to right, ${vocaloid.color}, #D019EF)`,
+                                        }}
                                     >
                                         {vocaloid.nameJp}
                                     </h2>
