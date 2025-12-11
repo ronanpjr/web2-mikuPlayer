@@ -77,10 +77,21 @@ const Lyrics = ({ song, currentTime, duration, onLyricClick, isFullScreen = fals
 
     // Auto-scroll to active line
     useEffect(() => {
-        if (activeLineRef.current) {
-            activeLineRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
+        if (activeLineRef.current && lyricsContainerRef.current) {
+            const container = lyricsContainerRef.current;
+            const element = activeLineRef.current;
+
+            // Calculate scroll position to center the active element relative to the container
+            const activeOffset = element.offsetTop;
+            const containerHeight = container.clientHeight;
+            const elementHeight = element.clientHeight;
+
+            // We want the center of the element to be at the center of the container
+            const targetScrollTop = activeOffset - (containerHeight / 2) + (elementHeight / 2);
+
+            container.scrollTo({
+                top: targetScrollTop,
+                behavior: 'smooth'
             });
         }
     }, [currentTime, isFullScreen]);
