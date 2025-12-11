@@ -142,6 +142,29 @@ const PlayerPage = () => {
     const [showVolume, setShowVolume] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
 
+    // Stats State
+    const [showStats, setShowStats] = useState(false);
+    const [userStats, setUserStats] = useState(() => {
+        const saved = localStorage.getItem('miku_player_stats');
+        return saved ? JSON.parse(saved) : { totalPlays: 0, songs: {}, artists: {} };
+    });
+
+    // Save stats on change
+    useEffect(() => {
+        localStorage.setItem('miku_player_stats', JSON.stringify(userStats));
+    }, [userStats]);
+
+    // Track play function
+    const trackPlay = (song) => {
+        setUserStats(prev => {
+            const newStats = { ...prev };
+            newStats.totalPlays += 1;
+            newStats.songs[song.title] = (newStats.songs[song.title] || 0) + 1;
+            newStats.artists[song.artist] = (newStats.artists[song.artist] || 0) + 1;
+            return newStats;
+        });
+    };
+
     // Theme Config State
     const [themeMode, setThemeMode] = useState('auto'); // 'auto' | 'manual'
     const [manualTheme, setManualTheme] = useState(null); // { primary, secondary }
@@ -376,8 +399,12 @@ const PlayerPage = () => {
 
     // Handle Song Change
     const nextSong = React.useCallback(() => {
+        // Track play if current song is ending naturally (this is called by onEnded)
+        if (activeQueue[currentSongIndex]) {
+            trackPlay(activeQueue[currentSongIndex]);
+        }
         setCurrentSongIndex(prev => (prev + 1) % activeQueue.length);
-    }, [activeQueue.length]);
+    }, [activeQueue, currentSongIndex]);
 
     const prevSong = React.useCallback(() => {
         setCurrentSongIndex(prev => (prev - 1 + activeQueue.length) % activeQueue.length);
@@ -627,7 +654,7 @@ const PlayerPage = () => {
                     <div className="lg:col-span-2 space-y-8">
                         <section>
                             <h2 className="text-2xl font-bold mb-4">Ações</h2>
-                            <div className="grid grid-cols-4 gap-4">
+                            <div className="grid grid-cols-5 gap-4">
                                 <button id="playlist-toggle" onClick={() => setShowPlaylist(!showPlaylist)} className="flex flex-col items-center justify-center gap-2 group">
                                     <div className="folder-icon"></div>
                                     <span className="text-xs text-muted-foreground group-hover:text-foreground">Minhas favoritas</span>
@@ -639,6 +666,10 @@ const PlayerPage = () => {
                                 <div onClick={handleShare} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
                                     <span className="text-xs text-muted-foreground">Compartilhar</span>
+                                </div>
+                                <div onClick={() => setShowStats(true)} className="neumorphic-icon cursor-pointer hover:text-primary transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                    <span className="text-xs text-muted-foreground">Perfil</span>
                                 </div>
                                 <button
                                     onClick={() => { setShowLyrics(!showLyrics); setShowPlaylist(false); }}
@@ -921,6 +952,125 @@ const PlayerPage = () => {
                     </div>
                 )}
             </main >
+
+            {/* Profile / Stats Modal */}
+            {showStats && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="player-card-glass w-full max-w-4xl border border-white/10 rounded-3xl p-8 shadow-2xl space-y-8 relative overflow-hidden max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3"></div>
+
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Seu Resumo Miku</h2>
+                            <button onClick={() => setShowStats(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+
+                        {userStats.totalPlays === 0 ? (
+                            <div className="text-center py-20">
+                                <p className="text-xl text-muted-foreground">Ouça algumas músicas para ver suas estatísticas!</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-8">
+                                {/* Hero Stats */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10 relative overflow-hidden group hover:bg-white/10 transition-colors">
+                                        <div className="relative z-10">
+                                            <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest mb-2">Total de Reproduções</p>
+                                            <h3 className="text-6xl font-black text-primary">{userStats.totalPlays}</h3>
+                                            <p className="text-sm text-foreground/60 mt-2">Músicas tocadas</p>
+                                        </div>
+                                        <div className="absolute right-0 bottom-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+                                        </div>
+                                    </div>
+
+                                    {/* Top Song Highlight */}
+                                    {(() => {
+                                        const topSongName = Object.entries(userStats.songs).sort((a, b) => b[1] - a[1])[0]?.[0];
+                                        const topSongCount = Object.entries(userStats.songs).sort((a, b) => b[1] - a[1])[0]?.[1];
+                                        const topSongObj = playlist.find(s => s.title === topSongName) || activeQueue[0];
+
+                                        if (!topSongName) return null;
+
+                                        return (
+                                            <div className="bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl p-6 border border-white/10 flex items-center gap-6 relative overflow-hidden">
+                                                <img src={topSongObj.art} alt="" className="w-24 h-24 rounded-xl shadow-lg z-10" />
+                                                <div className="z-10">
+                                                    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Música Mais Ouvida</p>
+                                                    <h3 className="text-2xl font-bold leading-tight">{topSongName}</h3>
+                                                    <p className="text-lg text-muted-foreground">{topSongObj.artist}</p>
+                                                    <div className="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-white/10 rounded-full text-xs font-medium">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                                                        {topSongCount} reproduções
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Top Songs List */}
+                                    <div className="space-y-4">
+                                        <h3 className="text-xl font-bold flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+                                            Top Músicas
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {Object.entries(userStats.songs)
+                                                .sort((a, b) => b[1] - a[1])
+                                                .slice(0, 5)
+                                                .map(([title, count], idx) => {
+                                                    const song = playlist.find(s => s.title === title);
+                                                    const max = Math.max(...Object.values(userStats.songs));
+                                                    return (
+                                                        <div key={title} className="bg-white/5 rounded-xl p-3 flex items-center gap-3 relative overflow-hidden group">
+                                                            <div className="absolute left-0 top-0 bottom-0 bg-primary/10 transition-all duration-500 ease-out" style={{ width: `${(count / max) * 100}%` }}></div>
+                                                            <div className="font-mono font-bold text-white/30 text-lg w-6 shrink-0 relative z-10 text-center">#{idx + 1}</div>
+                                                            {song && <img src={song.art} alt="" className="w-10 h-10 rounded-lg object-cover shadow-sm relative z-10" />}
+                                                            <div className="flex-1 min-w-0 relative z-10">
+                                                                <p className="font-medium truncate">{title}</p>
+                                                                <p className="text-xs text-muted-foreground truncate">{song?.artist}</p>
+                                                            </div>
+                                                            <div className="text-sm font-bold opacity-80 relative z-10">{count}</div>
+                                                        </div>
+                                                    );
+                                                })}
+                                        </div>
+                                    </div>
+
+                                    {/* Top Artists List */}
+                                    <div className="space-y-4">
+                                        <h3 className="text-xl font-bold flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" /><path d="M8.5 8.5a2.5 2.5 0 0 0-2.5 2.5" /><path d="M15.5 15.5a2.5 2.5 0 0 0 2.5-2.5" /></svg>
+                                            Top Artistas
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {Object.entries(userStats.artists)
+                                                .sort((a, b) => b[1] - a[1])
+                                                .slice(0, 5)
+                                                .map(([artist, count], idx) => {
+                                                    const max = Math.max(...Object.values(userStats.artists));
+                                                    return (
+                                                        <div key={artist} className="bg-white/5 rounded-xl p-3 flex items-center gap-3 relative overflow-hidden">
+                                                            <div className="absolute left-0 top-0 bottom-0 bg-secondary/10 transition-all duration-500 ease-out" style={{ width: `${(count / max) * 100}%` }}></div>
+                                                            <div className="font-mono font-bold text-white/30 text-lg w-6 shrink-0 relative z-10 text-center">#{idx + 1}</div>
+                                                            <div className="flex-1 min-w-0 relative z-10">
+                                                                <p className="font-medium truncate">{artist}</p>
+                                                            </div>
+                                                            <div className="text-sm font-bold opacity-80 relative z-10">{count}</div>
+                                                        </div>
+                                                    );
+                                                })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Full Screen Lyrics Overlay */}
             {showFullScreenLyrics && activeQueue[currentSongIndex] && (
