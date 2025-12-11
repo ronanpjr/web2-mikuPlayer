@@ -22,7 +22,7 @@ const VocaloidProfilePage = () => {
             birthday: 'August 31',
             description: 'The world\'s most famous virtual idol and pop sensation. With her iconic teal twin-tails and energetic performances, Miku has inspired millions of songs and performances worldwide.',
             personality: 'とても内気で、自分に自信がない少女。ある日、偶然通りがかったライブカフェ&バーで杏とミュージシャンがセッションしているのを目撃。',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/mikucircle.png',
             imagelong:"/assets/images/profile/miku.png",
             songs: ['World is Mine', 'Echo', 'Ghost Rule', 'PPPP'],
             voiceBank: 'Crypton Future Media',
@@ -42,7 +42,7 @@ const VocaloidProfilePage = () => {
             birthday: 'January 30',
             description: 'A mature and sophisticated vocalist with a calm presence. Luka is bilingual in Japanese and English, known for her smooth, soulful voice.',
             personality: 'Elegant and composed, Luka brings a mature sophistication to every performance. She has a gentle demeanor but powerful stage presence.',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/lukacircle.png',
             imagelong:"/assets/images/profile/luka.png",
             songs: ['Just Be Friends', 'Luka Luka Night Fever'],
             voiceBank: 'Crypton Future Media',
@@ -62,7 +62,7 @@ const VocaloidProfilePage = () => {
             birthday: 'December 27',
             description: 'Energetic mirror twins with vibrant personalities. Rin and Len are known for their powerful harmonies and dynamic performances.',
             personality: 'Playful and energetic, these twins complement each other perfectly. Rin is bold and outgoing, while Len is cool and reserved.',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/rinlencircle.png',
             imagelong:"/assets/images/profile/rinlen.png",
             songs: ['Remote Control', '劣等上等'],
             voiceBank: 'Crypton Future Media',
@@ -82,7 +82,7 @@ const VocaloidProfilePage = () => {
             birthday: 'June 26',
             description: 'A versatile vocalist with a sweet, expressive voice. GUMI is known for her wide vocal range and ability to sing various genres.',
             personality: 'Sweet and cheerful, GUMI has an infectious energy that shines through her performances. She\'s friendly and approachable.',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/gumicircle.png',
             imagelong:"/assets/images/profile/gumi.png",
             songs: ['Copycat', 'Echo'],
             voiceBank: 'Internet Co., Ltd.',
@@ -102,7 +102,7 @@ const VocaloidProfilePage = () => {
             birthday: 'April 1',
             description: 'Originally an April Fools\' joke, Teto became a beloved UTAU character. A 31-year-old chimera with distinctive twin drills.',
             personality: 'Despite her age, Teto has a youthful spirit. She started as a joke but became a symbol of community-driven creativity.',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/tetocircle.png',
             imagelong:"/assets/images/profile/teto.png",
             songs: ['Yoshiwara Lament', 'BIRDBRAIN', 'PPPP'],
             voiceBank: 'UTAU/SynthV',
@@ -122,7 +122,7 @@ const VocaloidProfilePage = () => {
             birthday: 'February 17',
             description: 'A blue-haired gentleman with a smooth, deep voice. One of the original Vocaloids and a certified ice cream enthusiast.',
             personality: 'Cool and collected on the outside, but has a warm heart. Known for his love of ice cream and his gentle demeanor.',
-            image: 'https://api.builder.io/api/v1/image/assets/TEMP/0b73e8521bb4aaf4efa1d32bce93216b8b6dd7d1?width=2972',
+            image: '/assets/images/profile/kaitocircle.png',
             imagelong:"/assets/images/profile/kaito.png",
             songs: ['ギガンティックO.T.N', 'BIRDBRAIN'],
             voiceBank: 'Crypton Future Media',
@@ -213,22 +213,24 @@ const VocaloidProfilePage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch min-h-[calc(100vh-12rem)]">
                         {/* Left: Character Image */}
                         <div
-                            className="relative h-full min-h-[600px] w-full rounded-3xl overflow-hidden"
-                            // Add the mask-image style here.
-                            // It creates a gradient from opaque (black) at the top to transparent at the bottom.
+                            className="relative h-full  w-full rounded-3xl overflow-hidden"
                             style={{
                                 WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
                                 maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)'
                             }}
                         >
-                            <img
-                                src={vocaloid.imagelong}
-                                alt={vocaloid.name}
-                                className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700"
-                                style={{
-                                    filter: `drop-shadow(0 0 20px ${vocaloid.color}40)`
-                                }}
-                            />
+                            <picture>
+                                <source 
+                                    media="(min-width: 1023px)" 
+                                    srcSet={vocaloid.imagelong} 
+                                />
+                                
+                                <img
+                                    src={vocaloid.image}
+                                    alt={vocaloid.name}
+                                    className=" object-cover  transition-transform duration-700"
+                                />
+                            </picture>
                         </div>
 
                         {/* Right: Profile Info */}
