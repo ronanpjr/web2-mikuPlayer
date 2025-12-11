@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import TrianglesBackground from '../components/TrianglesBackground';
 import SongIcon from '../components/SongIcon';
 
 const VocaloidProfilePage = () => {
@@ -17,13 +18,14 @@ const VocaloidProfilePage = () => {
             cv: 'Saki Fujita',
             color: '#00DDC0',
             colorRgb: '0 221 192',
+            triangles: ['#32CDFF', '#87ceeb', '#ff69b4'],
             age: '16',
             height: '158cm',
             birthday: 'August 31',
             description: 'The world\'s most famous virtual idol and pop sensation. With her iconic teal twin-tails and energetic performances, Miku has inspired millions of songs and performances worldwide.',
             personality: 'とても内気で、自分に自信がない少女。ある日、偶然通りがかったライブカフェ&バーで杏とミュージシャンがセッションしているのを目撃。',
             image: '/assets/images/profile/mikucircle.png',
-            imagelong:"/assets/images/profile/miku.png",
+            imagelong: "/assets/images/profile/miku.png",
             songs: ['World is Mine', 'Echo', 'Ghost Rule', 'PPPP'],
             voiceBank: 'Crypton Future Media',
             debut: '2007',
@@ -37,13 +39,14 @@ const VocaloidProfilePage = () => {
             cv: 'Yuu Asakawa',
             color: '#F641B4',
             colorRgb: '246 65 180',
+            triangles: ['#e539ab', '#f4a1d8', '#8e44ad'],
             age: '20',
             height: '162cm',
             birthday: 'January 30',
             description: 'A mature and sophisticated vocalist with a calm presence. Luka is bilingual in Japanese and English, known for her smooth, soulful voice.',
             personality: 'Elegant and composed, Luka brings a mature sophistication to every performance. She has a gentle demeanor but powerful stage presence.',
             image: '/assets/images/profile/lukacircle.png',
-            imagelong:"/assets/images/profile/luka.png",
+            imagelong: "/assets/images/profile/luka.png",
             songs: ['Just Be Friends', 'Luka Luka Night Fever'],
             voiceBank: 'Crypton Future Media',
             debut: '2009',
@@ -57,13 +60,14 @@ const VocaloidProfilePage = () => {
             cv: 'Asami Shimoda',
             color: '#F1C40F',
             colorRgb: '241 196 15',
+            triangles: ['#f1c40f', '#f7dc6f', '#3498db'],
             age: '14',
             height: '152cm',
             birthday: 'December 27',
             description: 'Energetic mirror twins with vibrant personalities. Rin and Len are known for their powerful harmonies and dynamic performances.',
             personality: 'Playful and energetic, these twins complement each other perfectly. Rin is bold and outgoing, while Len is cool and reserved.',
             image: '/assets/images/profile/rinlencircle.png',
-            imagelong:"/assets/images/profile/rinlen.png",
+            imagelong: "/assets/images/profile/rinlen.png",
             songs: ['Remote Control', '劣等上等'],
             voiceBank: 'Crypton Future Media',
             debut: '2007',
@@ -77,13 +81,14 @@ const VocaloidProfilePage = () => {
             cv: 'Megumi Nakajima',
             color: '#45B39D',
             colorRgb: '69 179 157',
+            triangles: ['#45b39d', '#2ecc71', '#f1c40f'],
             age: '15',
             height: '157cm',
             birthday: 'June 26',
             description: 'A versatile vocalist with a sweet, expressive voice. GUMI is known for her wide vocal range and ability to sing various genres.',
             personality: 'Sweet and cheerful, GUMI has an infectious energy that shines through her performances. She\'s friendly and approachable.',
             image: '/assets/images/profile/gumicircle.png',
-            imagelong:"/assets/images/profile/gumi.png",
+            imagelong: "/assets/images/profile/gumi.png",
             songs: ['Copycat', 'Echo'],
             voiceBank: 'Internet Co., Ltd.',
             debut: '2009',
@@ -97,13 +102,14 @@ const VocaloidProfilePage = () => {
             cv: 'Mayo Oyamano',
             color: '#E74C3C',
             colorRgb: '231 76 60',
+            triangles: ['#c0392b', '#e74c3c', '#f1c40f'],
             age: '31 (Chimera)',
             height: '159.5cm',
             birthday: 'April 1',
             description: 'Originally an April Fools\' joke, Teto became a beloved UTAU character. A 31-year-old chimera with distinctive twin drills.',
             personality: 'Despite her age, Teto has a youthful spirit. She started as a joke but became a symbol of community-driven creativity.',
             image: '/assets/images/profile/tetocircle.png',
-            imagelong:"/assets/images/profile/teto.png",
+            imagelong: "/assets/images/profile/teto.png",
             songs: ['Yoshiwara Lament', 'BIRDBRAIN', 'PPPP'],
             voiceBank: 'UTAU/SynthV',
             debut: '2008',
@@ -117,13 +123,14 @@ const VocaloidProfilePage = () => {
             cv: 'Naoto Fūga',
             color: '#3498DB',
             colorRgb: '52 152 219',
+            triangles: ['#3498DB', '#64b4f0', '#ffffff'],
             age: '20',
             height: '176cm',
             birthday: 'February 17',
             description: 'A blue-haired gentleman with a smooth, deep voice. One of the original Vocaloids and a certified ice cream enthusiast.',
             personality: 'Cool and collected on the outside, but has a warm heart. Known for his love of ice cream and his gentle demeanor.',
             image: '/assets/images/profile/kaitocircle.png',
-            imagelong:"/assets/images/profile/kaito.png",
+            imagelong: "/assets/images/profile/kaito.png",
             songs: ['ギガンティックO.T.N', 'BIRDBRAIN'],
             voiceBank: 'Crypton Future Media',
             debut: '2006',
@@ -194,23 +201,24 @@ const VocaloidProfilePage = () => {
     return (
         <div className="text-foreground transition-colors duration-300 ease-in- overflow-hidden min-h-screen">
             <div id="background-overlay"></div>
+            {vocaloid && <TrianglesBackground colors={vocaloid.triangles || ['#00DDC0', '#3bebd4', '#ffffff']} />}
 
             <main className="relative z-10 min-h-screen">
-                
+
 
                 {/* Profile */}
                 <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-12">
                     <Header
-                    isLightMode={isLightMode}
-                    onToggleTheme={() => {
-                        const newMode = !isLightMode;
-                        setIsLightMode(newMode);
-                        document.body.classList.toggle('light', newMode);
-                        localStorage.setItem('theme', newMode ? 'light' : 'dark');
-                    }}
-                    showVocaloidsLink={true}
-                    showPlayerLink={true}
-                />
+                        isLightMode={isLightMode}
+                        onToggleTheme={() => {
+                            const newMode = !isLightMode;
+                            setIsLightMode(newMode);
+                            document.body.classList.toggle('light', newMode);
+                            localStorage.setItem('theme', newMode ? 'light' : 'dark');
+                        }}
+                        showVocaloidsLink={true}
+                        showPlayerLink={true}
+                    />
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch min-h-[calc(100vh-12rem)]">
                         {/* Left: Character Image */}
                         <div
@@ -221,11 +229,11 @@ const VocaloidProfilePage = () => {
                             }}
                         >
                             <picture>
-                                <source 
-                                    media="(min-width: 1023px)" 
-                                    srcSet={vocaloid.imagelong} 
+                                <source
+                                    media="(min-width: 1023px)"
+                                    srcSet={vocaloid.imagelong}
                                 />
-                                
+
                                 <img
                                     src={vocaloid.image}
                                     alt={vocaloid.name}
@@ -242,8 +250,8 @@ const VocaloidProfilePage = () => {
                                     <h2
                                         className="text-6xl font-black text-transparent bg-clip-text pb-2"
                                         style={{
-                
-                                        backgroundImage: `linear-gradient(to right, ${vocaloid.color}, #D019EF)`,
+
+                                            backgroundImage: `linear-gradient(to right, ${vocaloid.color}, #D019EF)`,
                                         }}
                                     >
                                         {vocaloid.nameJp}

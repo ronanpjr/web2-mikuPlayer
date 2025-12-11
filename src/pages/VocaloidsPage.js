@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import TrianglesBackground from '../components/TrianglesBackground';
 
 const VocaloidsPage = () => {
     const [isLightMode, setIsLightMode] = useState(false);
@@ -73,8 +74,9 @@ const VocaloidsPage = () => {
     return (
         <div className="text-foreground transition-colors duration-300 ease-in-out min-h-screen">
             <div id="background-overlay"></div>
+            <TrianglesBackground colors={['#32CDFF', '#87ceeb', '#ff69b4']} />
 
-            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-10 pb-12">
+            <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
                 <Header
                     isLightMode={isLightMode}
                     onToggleTheme={() => {
