@@ -803,7 +803,11 @@ const PlayerPage = () => {
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
 
                                 <div className="flex items-center justify-between">
-                                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">Configurações</h2>
+                                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 dark:from-white dark:to-white/70 light:from-zinc-900 light:to-zinc-700"
+                                        style={{
+                                            backgroundImage: isLightMode ? 'linear-gradient(to right, #18181b, #3f3f46)' : 'linear-gradient(to right, #ffffff, rgba(255,255,255,0.7))'
+                                        }}
+                                    >Configurações</h2>
                                     <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                     </button>
