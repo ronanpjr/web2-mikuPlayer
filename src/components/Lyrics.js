@@ -81,16 +81,19 @@ const Lyrics = ({ song, currentTime, duration, onLyricClick, isFullScreen = fals
             const container = lyricsContainerRef.current;
             const element = activeLineRef.current;
 
-            // Calculate scroll position to center the active element relative to the container
-            const activeOffset = element.offsetTop;
-            const containerHeight = container.clientHeight;
-            const elementHeight = element.clientHeight;
+            const containerRect = container.getBoundingClientRect();
+            const elementRect = element.getBoundingClientRect();
 
-            // We want the center of the element to be at the center of the container
-            const targetScrollTop = activeOffset - (containerHeight / 2) + (elementHeight / 2);
+            // Calculate the offset to position the element at ~30% from the top (higher up)
+            // Center would be 50% (0.5), we want it higher so we subtract less from the top or add to the scroll
+            const desiredTop = containerRect.top + (containerRect.height * 0.30);
+            const currentTop = elementRect.top + (elementRect.height / 2);
 
+            const offset = currentTop - desiredTop;
+
+            // Adjust scrollTop
             container.scrollTo({
-                top: targetScrollTop,
+                top: container.scrollTop + offset,
                 behavior: 'smooth'
             });
         }
@@ -121,7 +124,7 @@ const Lyrics = ({ song, currentTime, duration, onLyricClick, isFullScreen = fals
     return (
         <div
             className={`
-                h-full overflow-y-auto px-4 custom-scrollbar text-center transition-all duration-300
+                relative h-full overflow-y-auto px-4 custom-scrollbar text-center transition-all duration-300
                 ${isFullScreen
                     ? 'py-[50vh] space-y-12'
                     : 'py-8 space-y-6'}
@@ -139,13 +142,12 @@ const Lyrics = ({ song, currentTime, duration, onLyricClick, isFullScreen = fals
                         className={`transition-all duration-700 ease-[cubic-bezier(0.25,0.4,0.25,1)] cursor-pointer
                             ${isFullScreen
                                 ? `font-black tracking-tight leading-tight ${isActive
-                                    ? 'text-5xl md:text-7xl text-white scale-100 opacity-100 drop-shadow-2xl'
-                                    : 'text-3xl md:text-5xl text-white/40 blur-[2px] opacity-40 scale-95 hover:opacity-80 hover:blur-none'}`
+                                    ? 'text-4xl md:text-7xl text-white scale-100 opacity-100 drop-shadow-2xl'
+                                    : 'text-4xl md:text-5xl text-white/40 blur-[2px] opacity-40 scale-100 md:scale-95 hover:opacity-80 hover:blur-none'}`
                                 : `${isActive
                                     ? 'text-2xl font-bold text-foreground scale-105 blur-none opacity-100'
                                     : 'text-lg text-muted-foreground/60 blur-[1px] opacity-60 hover:opacity-100 hover:blur-none hover:text-foreground/80'}`
-                            }
-                            ${line.isPlain ? 'whitespace-pre-wrap cursor-default' : ''}
+                            }                          ${line.isPlain ? 'whitespace-pre-wrap cursor-default' : ''}
                         `}
                     >
                         {line.text}

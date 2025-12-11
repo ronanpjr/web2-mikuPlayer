@@ -417,7 +417,7 @@ header {
     align-items: flex-start;
     text-align: left;
     position: static;
-    padding-top: 1rem;
+    padding-top: 8rem;
     z-index: 20;
 }
 
@@ -731,4 +731,48 @@ body.light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(to bottom,
             rgba(var(--color-primary), 0.9),
             rgba(var(--color-secondary), 0.9));
+}
+
+/* --- Volume Slider Custom Styles --- */
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 6rem;
+    /* Width becomes height due to rotation */
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: none;
+    transition: transform 0.1s ease-in-out;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+body.light .volume-slider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+body.light .volume-slider::-webkit-slider-thumb {
+    background: rgb(var(--color-primary));
+    box-shadow: 0 0 10px rgba(var(--color-primary), 0.4);
+}
+
+.mask-linear-fade {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
 }
