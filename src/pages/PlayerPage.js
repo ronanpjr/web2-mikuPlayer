@@ -135,7 +135,9 @@ const PlayerPage = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [showPlaylist, setShowPlaylist] = useState(false);
+
     const [showLyrics, setShowLyrics] = useState(false);
+    const [showFullScreenLyrics, setShowFullScreenLyrics] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [showVolume, setShowVolume] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -685,7 +687,16 @@ const PlayerPage = () => {
                         {/* Lyrics Section */}
                         {showLyrics && (
                             <section className="animate-in fade-in zoom-in duration-300">
-                                <h2 className="text-2xl font-bold mb-4">Letras</h2>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h2 className="text-2xl font-bold">Letras</h2>
+                                    <button
+                                        onClick={() => setShowFullScreenLyrics(true)}
+                                        className="p-2 hover:bg-white/10 rounded-full transition-colors text-muted-foreground hover:text-primary"
+                                        title="Expandir (Full Screen)"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" x2="14" y1="3" y2="10" /><line x1="3" x2="10" y1="21" y2="14" /></svg>
+                                    </button>
+                                </div>
                                 <div className="player-card-glass border border-white/10 rounded-3xl p-6 shadow-2xl h-[500px]">
                                     <Lyrics
                                         song={currentSong}
@@ -910,6 +921,76 @@ const PlayerPage = () => {
                     </div>
                 )}
             </main >
+
+            {/* Full Screen Lyrics Overlay */}
+            {showFullScreenLyrics && activeQueue[currentSongIndex] && (
+                <div className="fixed inset-0 z-[200] flex flex-col bg-black animate-in fade-in duration-500">
+                    {/* Dynamic Blurred Background */}
+                    <div className="absolute inset-0 overflow-hidden">
+                        <img
+                            src={activeQueue[currentSongIndex].art}
+                            alt=""
+                            className="w-full h-full object-cover blur-[80px] scale-110 opacity-60"
+                        />
+                        <div className="absolute inset-0 bg-black/40"></div>
+                    </div>
+
+                    {/* Header */}
+                    <div className="relative z-10 p-8 flex justify-end">
+                        <button
+                            onClick={() => setShowFullScreenLyrics(false)}
+                            className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all hover:scale-105"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+
+                    {/* Lyrics Content */}
+                    <div className="relative z-10 flex-1 overflow-hidden mask-linear-fade">
+                        <Lyrics
+                            song={activeQueue[currentSongIndex]}
+                            currentTime={currentTime}
+                            duration={duration}
+                            onLyricClick={handleLyricClick}
+                            isFullScreen={true}
+                        />
+                    </div>
+
+                    {/* Minimal Controls */}
+                    <div className="relative z-10 p-12 pb-16 w-full max-w-4xl mx-auto space-y-6">
+                        <div className="text-center space-y-1">
+                            <h2 className="text-4xl font-black text-white tracking-tight">{activeQueue[currentSongIndex].title}</h2>
+                            <p className="text-xl text-white/60 font-medium">{activeQueue[currentSongIndex].artist}</p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={duration ? (currentTime / duration) * 100 : 0}
+                                onChange={handleProgressChange}
+                                className="w-full h-2 rounded-full appearance-none cursor-pointer bg-white/20 accent-white hover:accent-primary transition-all"
+                            />
+                            <div className="flex justify-center gap-12 items-center">
+                                <button onClick={prevSong} className="p-2 text-white/70 hover:text-white transition-colors hover:scale-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="19 20 9 12 19 4 19 20" /><line x1="5" x2="5" y1="19" y2="5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
+                                </button>
+                                <button onClick={() => setIsPlaying(!isPlaying)} className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-2xl hover:shadow-white/20">
+                                    {isPlaying ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="4" height="16" x="6" y="4" /><rect width="4" height="16" x="14" y="4" /></svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                                    )}
+                                </button>
+                                <button onClick={nextSong} className="p-2 text-white/70 hover:text-white transition-colors hover:scale-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 4 15 12 5 20 5 4" /><line x1="19" x2="19" y1="5" y2="19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 };
