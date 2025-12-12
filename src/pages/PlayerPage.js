@@ -8,7 +8,7 @@ import ActionButton from '../components/ActionButton';
 import SongIcon from '../components/SongIcon';
 
 const PlayerPage = () => {
-    // Playlist data from player.js
+
     const playlist = React.useMemo(() => [
         {
             title: "World is Mine", artist: "ryo (supercell)",
@@ -454,7 +454,6 @@ const PlayerPage = () => {
         const newBands = [...eqBands];
         newBands[index] = value;
         setEqBands(newBands);
-        // In a real implementation, this would connect to Web Audio API filters
     };
 
     // Canvas Animation
@@ -614,25 +613,25 @@ const PlayerPage = () => {
 
                                 <ActionButton
                                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M5 12h14" /><path d="M12 5v14" /></svg>}
-                                    label="Adicionar"
+                                    label="Add"
                                     onClick={() => setShowCreatePlaylistModal(true)}
                                 />
 
                                 <ActionButton
                                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>}
-                                    label="Compartilhar"
+                                    label="Share"
                                     onClick={handleShare}
                                 />
 
                                 <ActionButton
                                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-muted-foreground"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>}
-                                    label="Perfil"
+                                    label="Profile"
                                     onClick={() => setShowStats(true)}
                                 />
 
                                 <ActionButton
                                     icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 group-hover:text-foreground"><path d="M12 6.52c.82-.9 2.05-1.52 3.5-1.52 2.76 0 5 2.24 5 5 0 3.15-2.5 5.5-5 5.5-1.45 0-2.68-.62-3.5-1.52-.82.9-2.05 1.52-3.5 1.52-2.76 0-5-2.24-5-5 0-3.15 2.5-5.5 5-5.5 1.45 0 2.68.62 3.5 1.52z" /><path d="m12 12.5-2.5 3" /><path d="m14.5 15.5 2.5-3" /></svg>}
-                                    label="Letras"
+                                    label="Lyrics"
                                     onClick={() => { setShowLyrics(!showLyrics); setShowPlaylist(false); }}
                                     isActive={showLyrics}
                                 />
@@ -844,7 +843,7 @@ const PlayerPage = () => {
 
                                     {/* Header with Close Button */}
                                     <div className="flex items-center justify-between">
-                                        <h2 className={`text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${isLightMode ? 'from-black to-zinc-600' : 'from-white to-white/70'}`}>Configurações</h2>
+                                        <h2 className={`text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${isLightMode ? 'from-black to-zinc-600' : 'from-white to-white/70'}`}>Settings</h2>
                                         <button onClick={() => setShowSettings(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                         </button>
@@ -852,7 +851,7 @@ const PlayerPage = () => {
 
                                     {/* Appearance Section */}
                                     <div className="space-y-4">
-                                        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Aparência</h3>
+                                        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Appearance</h3>
 
                                         <div className="bg-white/5 rounded-2xl p-2 flex gap-2 border border-white/5">
                                             <button
@@ -873,7 +872,7 @@ const PlayerPage = () => {
 
                                         <div className="space-y-3 pt-2">
                                             <div className="flex items-center justify-between">
-                                                <label className="text-xs font-medium text-muted-foreground ml-1">Cores do Tema</label>
+                                                <label className="text-xs font-medium text-muted-foreground ml-1">Theme Colors</label>
                                                 {themeMode === 'auto' && <span className="text-[10px] font-bold px-2 py-0.5 bg-primary/20 text-primary rounded-full uppercase tracking-wider">Auto</span>}
                                             </div>
                                             <div className="grid grid-cols-6 gap-2">
@@ -897,7 +896,7 @@ const PlayerPage = () => {
                                     {/* Equalizer Section */}
                                     <section>
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Equalizador</h3>
+                                            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest pl-1">Equalizer</h3>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs font-medium text-muted-foreground">Reset</span>
                                                 <button
@@ -999,7 +998,7 @@ const PlayerPage = () => {
                                     <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3"></div>
 
                                     <div className="flex items-center justify-between">
-                                        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Seu Resumo Miku</h2>
+                                        <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Your Miku Wrapped</h2>
                                         <button onClick={() => setShowStats(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                         </button>

@@ -124,10 +124,9 @@ const LandingPage = () => {
                             </div>
                             <div>
                                 <p className="description">
-                                    O Miku Music Player traz praticidade e estilo em um design
-                                    inspirado na Hatsune Miku. Transforme suas músicas em uma
-                                    experiência mais imersiva e cheia de energia. Aproveite
-                                    cada batida com personalidade e diversão.
+                                    The Miku Music Player brings practicality and style in a design inspired by Hatsune Miku. 
+                                    Transform your music into a more immersive and energetic experience. 
+                                    Enjoy every beat with personality and fun.
                                 </p>
                             </div>
                             <div className="cta-section">

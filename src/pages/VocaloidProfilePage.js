@@ -21,7 +21,7 @@ const VocaloidProfilePage = () => {
             height: '158cm',
             birthday: 'August 31',
             description: 'The world\'s most famous virtual idol and pop sensation. With her iconic teal twin-tails and energetic performances, Miku has inspired millions of songs and performances worldwide.',
-            personality: 'とても内気で、自分に自信がない少女。ある日、偶然通りがかったライブカフェ&バーで杏とミュージシャンがセッションしているのを目撃。',
+            personality: 'Energetic and eternally cheerful, Miku embodies youthful optimism and boundless creativity. She is a friendly, sometimes mischievous figure whose voice radiates joy and potential.',
             image: '/assets/images/profile/mikucircle.png',
             imagelong:"/assets/images/profile/miku.png",
             songs: ['World is Mine', 'Echo', 'Ghost Rule', 'PPPP'],
